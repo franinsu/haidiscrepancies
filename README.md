@@ -321,6 +321,26 @@ New generation requires a fresh destination. Image rendering uses Pillow's
 BASIC layout engine; matching the frozen pixels also requires the original
 font. Use each entrypoint's `--help` for generation and deployment options.
 
+## Paper website
+
+The static companion website lives in `website/`. Preview it locally with:
+
+```sh
+python -m http.server 8016 --bind 127.0.0.1 --directory website
+```
+
+Open `http://127.0.0.1:8016/`. The site has no build dependencies or tracking.
+The figures display entropy, distribution distances and geometry,
+presentation/context effects, relative difficulty, and prompting/effort comparisons.
+Hover or focus to highlight related marks and inspect values. All comparisons
+remain visible. The native HTML/SVG figures follow the paper’s layouts and use
+exact exports of the rendered analysis. Regenerate
+the aggregate chart values after rendering with `python -m figures.website_figures`.
+The puzzle and stimulus pages use frozen study materials and aggregate answer
+counts; regenerate these with `python -m figures.website_examples`. Neither export
+reads participant-level records.
+The GitHub Pages workflow publishes only `website/` when it changes on `main`.
+
 ## Cleanup
 
 ```sh
