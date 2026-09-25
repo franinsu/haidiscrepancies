@@ -339,7 +339,7 @@ the aggregate chart values after rendering with `python -m figures.website_figur
 The puzzle and stimulus pages use frozen study materials and aggregate answer
 counts; regenerate these with `python -m figures.website_examples`. Neither export
 reads participant-level records.
-The GitHub Pages workflow publishes only `website/` when it changes on `main`.
+The GitHub Pages workflow publishes only `website/` and is run manually (Actions → Publish paper website).
 
 ## Cleanup
 

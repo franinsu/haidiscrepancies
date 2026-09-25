@@ -1,11 +1,7 @@
 name: Publish paper website
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - website/**
-      - .github/workflows/pages.yml
+  # Manual only while the repository is private; restore the push trigger to auto-publish.
   workflow_dispatch:
 
 permissions:
