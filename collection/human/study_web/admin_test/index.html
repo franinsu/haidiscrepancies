@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Test</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="admin_test.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <form id="adminTestForm" autocomplete="off">
+        <label>
+          Name
+          <input id="testerName" name="username" autocomplete="off" required />
+        </label>
+        <label>
+          Password
+          <input id="testerPassword" name="password" autocomplete="new-password" type="password" required />
+        </label>
+        <button id="submitBtn" type="submit">Start</button>
+        <p id="status" aria-live="polite"></p>
+      </form>
+    </main>
+  </body>
+</html>

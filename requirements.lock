@@ -1,0 +1,15 @@
+# Tested Python version: 3.13.0. Install with: python -m pip install -r requirements.lock
+# Numerical thread counts and random streams are recorded by the runners.
+numpy==2.4.6
+scipy==1.17.1
+matplotlib==3.11.0
+Pillow==10.4.0
+contourpy==1.3.3
+cycler==0.12.1
+fonttools==4.63.0
+kiwisolver==1.5.0
+packaging==26.2
+pyparsing==3.3.2
+python-dateutil==2.9.0.post0
+six==1.17.0
+PyMuPDF==1.27.2.3

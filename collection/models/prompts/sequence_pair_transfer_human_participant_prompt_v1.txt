@@ -1,0 +1,7 @@
+Act as a human participant solving this task.
+Solve Puzzle A and Puzzle B shown in the image the way a human participant would.
+Return exactly two final answer lines and nothing else.
+Each final line must exactly match the corresponding answer format shown in the image, including labels, punctuation, separators, and capitalization.
+Replace placeholders with your answers.
+Do not include any explanation, reasoning, preface, markdown, extra whitespace, or additional lines.
+For each puzzle, give the first correct answer that comes to mind.

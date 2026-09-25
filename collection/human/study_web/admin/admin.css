@@ -1,0 +1,10 @@
+:root { font-family: system-ui, sans-serif; color: #17206a; background: #fbfaf7; }
+body { max-width: 820px; margin: 2rem auto; padding: 0 1rem; }
+a { color: inherit; }
+main { margin-top: 2rem; }
+section { padding: 1.5rem; background: white; border: 1px solid #e1ded6; border-radius: .5rem; }
+label { display: block; margin: 1rem 0; }
+input, select, button { font: inherit; padding: .55rem; }
+input, select { margin-left: .5rem; }
+button { cursor: pointer; margin: .2rem; }
+.hidden { display: none; }

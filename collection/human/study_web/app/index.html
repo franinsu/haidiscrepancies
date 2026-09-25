@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Puzzle Reasoning</title>
+    <link rel="icon" href="/study_web/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=20260525-mine-colors" />
+    <script src="app.js?v=20260620-post-retry" defer></script>
+  </head>
+  <body>
+    <nav class="site-nav" aria-label="Study navigation">
+      <span class="brand-link" aria-label="Puzzle Reasoning">Puzzle Reasoning</span>
+      <div>
+        <a href="../admin/">Admin</a>
+        </div>
+      <a id="formalAdminTestLink" class="formal-admin-test-link" href="../admin_test/?study=main">Admin</a>
+    </nav>
+    <main class="shell">
+      <section id="setup" class="panel setup-panel">
+        <div class="setup-layout">
+          <div class="setup-primary">
+            <h1>Human Reasoning</h1>
+            <section id="formalInfo" class="formal-info hidden" aria-label="Study information">
+              <strong id="formalStudyName">Study assignment</strong>
+              <p id="formalPayCopy">
+                You will solve the assigned puzzles using the visual interface. Correct trials earn a bonus; skip, timeout, and too-many-incorrect trials are recorded.
+              </p>
+              <label class="consent-check">
+                <input id="consentCheck" type="checkbox" />
+                I understand the task, timing, and payment rules, and I agree to continue.
+              </label>
+            </section>
+
+            <div class="setup-grid">
+              <label>
+                Username
+                <input
+                  id="participantId"
+                  value="M0001"
+                  autocomplete="off"
+                  pattern="[A-Za-z0-9_]+"
+                  title="Use only letters, numbers, and underscores."
+                />
+              </label>
+              <p id="participantMeta" class="muted"></p>
+            </div>
+
+            <section id="testerLoginPanel" class="tester-login hidden" aria-label="Researcher test login">
+              <div>
+                <strong>Researcher test access</strong>
+                <p class="muted">For internal testing only. This path records data but has no Prolific payment.</p>
+              </div>
+              <label>
+                Researcher username
+                <input id="testerName" autocomplete="username" />
+              </label>
+              <label>
+                Password
+                <input id="testerPassword" autocomplete="current-password" type="password" />
+              </label>
+            </section>
+
+
+            <div class="setup-actions">
+              <button id="registerBtn" class="primary" type="button">Register username</button>
+              <button id="startBtn" class="primary hidden" type="button" disabled>Start assigned set</button>
+              <span id="loadStatus" class="muted" role="status"></span>
+            </div>
+          </div>
+
+          <section class="overview-panel" aria-labelledby="overviewTitle">
+            <div class="overview-header">
+              <div>
+                <h2 id="overviewTitle">Assigned puzzle list</h2>
+                <p id="setupSummary" class="muted">Register a username to see the assigned puzzle IDs.</p>
+              </div>
+              <button id="refreshListBtn" class="secondary" type="button">Refresh list</button>
+            </div>
+            <div id="setupCounts" class="count-row"></div>
+            <div id="setupPuzzleList" class="puzzle-list setup-list" aria-label="Planned puzzle list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="trial" class="panel trial-panel hidden">
+        <section class="study-progress" aria-label="Study progress">
+          <div class="progress-copy">
+            <strong id="studyProgressText">0 / 0 done</strong>
+            <span id="totalElapsedText" class="muted">Total 00:00 / --:--</span>
+            <span id="elapsedText" class="muted">00:00</span>
+          </div>
+          <progress id="progressBar" value="0" max="1"></progress>
+          <div id="progressBreakdown" class="progress-breakdown muted"></div>
+        </section>
+
+        <div class="trial-layout">
+          <div class="trial-main">
+            <header class="topbar">
+              <div>
+                <strong id="progressText"></strong>
+                <span id="metaText"></span>
+              </div>
+            </header>
+
+            <section class="prompt-card" aria-labelledby="promptTitle">
+              <h2 id="promptTitle">Puzzle</h2>
+              <p id="promptText"></p>
+            </section>
+
+            <section id="visualArea" class="visual-area" aria-live="polite"></section>
+
+            <section class="answer-card">
+              <div class="answer-topline">
+                <strong>Current answer</strong>
+                <span id="answerMeta" class="muted"></span>
+              </div>
+              <pre id="answerPreview" class="answer-preview"></pre>
+              <div id="answerArea" class="answer-area"></div>
+              <p id="statusText" class="status" role="status"></p>
+            </section>
+
+            <div class="actions">
+              <button id="submitBtn" class="primary" type="button" disabled>Submit final answer</button>
+              <button id="giveUpBtn" class="secondary" type="button" disabled>I don't know</button>
+              <button id="nextBtn" class="primary hidden" type="button">Next puzzle</button>
+              <button id="breakBtn" class="secondary hidden" type="button">Take break</button>
+            </div>
+          </div>
+
+          <aside class="trial-sidebar" aria-labelledby="trialListTitle">
+            <h2 id="trialListTitle">All puzzles</h2>
+            <p id="trialListSummary" class="muted"></p>
+            <div id="trialPuzzleList" class="puzzle-list trial-list"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="breakPanel" class="panel break-panel hidden">
+        <h2>Break</h2>
+        <p>You can pause here between puzzles. Resume when ready to continue your assigned set.</p>
+        <div class="actions">
+          <button id="resumeBtn" class="primary" type="button">Resume</button>
+        </div>
+      </section>
+
+      <section id="done" class="panel done-panel hidden">
+        <h2>Done</h2>
+        <p id="doneSummary">Your assigned set is complete.</p>
+        <div id="completionCodeBox" class="completion-code hidden"></div>
+      </section>
+    </main>
+  </body>
+</html>

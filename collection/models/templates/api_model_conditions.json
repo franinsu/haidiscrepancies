@@ -1,0 +1,112 @@
+{
+  "ANT_OPUS48_LOW": {
+    "provider": "anthropic",
+    "api": "messages",
+    "model": "claude-opus-4-8",
+    "sampling_profile": "provider_default",
+    "max_tokens": 8192,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "output_config": {
+      "effort": "low"
+    },
+    "tools": [],
+    "stream": false
+  },
+  "ANT_OPUS48_MEDIUM": {
+    "provider": "anthropic",
+    "api": "messages",
+    "model": "claude-opus-4-8",
+    "sampling_profile": "provider_default",
+    "max_tokens": 8192,
+    "thinking": {
+      "type": "adaptive",
+      "display": "omitted"
+    },
+    "output_config": {
+      "effort": "medium"
+    },
+    "tools": [],
+    "stream": false
+  },
+  "GEMINI_35_FLASH_LOW": {
+    "provider": "google",
+    "api": "generate_content",
+    "model": "gemini-3.5-flash",
+    "sampling_profile": "provider_default",
+    "max_output_tokens": 8192,
+    "thinking": {
+      "type": "level",
+      "effort": "low"
+    },
+    "tools": [],
+    "stream": false
+  },
+  "GEMINI_35_FLASH_MEDIUM": {
+    "provider": "google",
+    "api": "generate_content",
+    "model": "gemini-3.5-flash",
+    "sampling_profile": "provider_default",
+    "max_output_tokens": 8192,
+    "thinking": {
+      "type": "level",
+      "effort": "medium"
+    },
+    "tools": [],
+    "stream": false
+  },
+  "OAI_GPT56_SOL_LOW": {
+    "provider": "openai",
+    "api": "responses",
+    "model": "gpt-5.6-sol",
+    "sampling_profile": "provider_default",
+    "max_output_tokens": 8192,
+    "reasoning": {
+      "effort": "low"
+    },
+    "text": {
+      "verbosity": "low",
+      "format": {
+        "type": "text"
+      }
+    },
+    "image_detail": "high",
+    "live_fallback": {
+      "service_tier": "flex",
+      "timeout_seconds": 900,
+      "resource_unavailable_retries": 6,
+      "retry_initial_seconds": 2,
+      "retry_max_seconds": 60
+    },
+    "tools": [],
+    "stream": false
+  },
+  "OAI_GPT56_SOL_MEDIUM": {
+    "provider": "openai",
+    "api": "responses",
+    "model": "gpt-5.6-sol",
+    "sampling_profile": "provider_default",
+    "max_output_tokens": 8192,
+    "reasoning": {
+      "effort": "medium"
+    },
+    "text": {
+      "verbosity": "low",
+      "format": {
+        "type": "text"
+      }
+    },
+    "image_detail": "high",
+    "live_fallback": {
+      "service_tier": "flex",
+      "timeout_seconds": 900,
+      "resource_unavailable_retries": 6,
+      "retry_initial_seconds": 2,
+      "retry_max_seconds": 60
+    },
+    "tools": [],
+    "stream": false
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "base_family_counts_by_type": {
+    "arithmetic24": 20,
+    "grid_placement": 20,
+    "maze": 20,
+    "minesweeper_lite": 20,
+    "mini_sudoku": 20
+  },
+  "base_family_search_pressure_counts": {
+    "arithmetic24:low": 20,
+    "grid_placement:high": 6,
+    "grid_placement:low": 7,
+    "grid_placement:medium": 7,
+    "maze:high": 6,
+    "maze:low": 7,
+    "maze:medium": 7,
+    "minesweeper_lite:high": 6,
+    "minesweeper_lite:low": 7,
+    "minesweeper_lite:medium": 7,
+    "mini_sudoku:high": 6,
+    "mini_sudoku:low": 7,
+    "mini_sudoku:medium": 7
+  },
+  "counts_by_type": {
+    "arithmetic24": 20,
+    "grid_placement": 20,
+    "maze": 20,
+    "minesweeper_lite": 20,
+    "mini_sudoku": 20
+  },
+  "created_at_utc": "2026-05-26T20:58:14+00:00",
+  "dataset_hash": "4aca0a42531bf709b32af4c14fd117a9a0e9ba033dad0413837012fbea7031ec",
+  "dataset_version": "v7_main_core_5types_100canonical_plus_modules_seed0",
+  "difficulty_counts": {
+    "arithmetic24:easy": 20,
+    "grid_placement:easy": 6,
+    "grid_placement:hard": 3,
+    "grid_placement:medium": 11,
+    "maze:easy": 5,
+    "maze:hard": 8,
+    "maze:medium": 7,
+    "minesweeper_lite:easy": 16,
+    "minesweeper_lite:hard": 1,
+    "minesweeper_lite:medium": 3,
+    "mini_sudoku:easy": 18,
+    "mini_sudoku:medium": 2
+  },
+  "generation_method": "python -B generate_all.py --num_base_per_type 20 --seed 0 --out_dir data",
+  "num_puzzles": 100,
+  "probe_cell_counts": {
+    "arithmetic24:low_many": 15,
+    "arithmetic24:low_some": 5,
+    "grid_placement:high_few": 2,
+    "grid_placement:high_many": 1,
+    "grid_placement:high_some": 3,
+    "grid_placement:low_many": 4,
+    "grid_placement:low_some": 3,
+    "grid_placement:medium_few": 1,
+    "grid_placement:medium_many": 4,
+    "grid_placement:medium_some": 2,
+    "maze:high_few": 1,
+    "maze:high_many": 1,
+    "maze:high_some": 4,
+    "maze:low_many": 4,
+    "maze:low_some": 3,
+    "maze:medium_few": 1,
+    "maze:medium_many": 2,
+    "maze:medium_some": 4,
+    "minesweeper_lite:high_few": 3,
+    "minesweeper_lite:high_many": 1,
+    "minesweeper_lite:high_some": 2,
+    "minesweeper_lite:low_many": 2,
+    "minesweeper_lite:low_some": 5,
+    "minesweeper_lite:medium_few": 2,
+    "minesweeper_lite:medium_many": 2,
+    "minesweeper_lite:medium_some": 3,
+    "mini_sudoku:high_few": 2,
+    "mini_sudoku:high_many": 1,
+    "mini_sudoku:high_some": 3,
+    "mini_sudoku:low_few": 1,
+    "mini_sudoku:low_many": 3,
+    "mini_sudoku:low_some": 3,
+    "mini_sudoku:medium_many": 3,
+    "mini_sudoku:medium_some": 4
+  },
+  "search_pressure_counts": {
+    "arithmetic24:low": 20,
+    "grid_placement:high": 6,
+    "grid_placement:low": 7,
+    "grid_placement:medium": 7,
+    "maze:high": 6,
+    "maze:low": 7,
+    "maze:medium": 7,
+    "minesweeper_lite:high": 6,
+    "minesweeper_lite:low": 7,
+    "minesweeper_lite:medium": 7,
+    "mini_sudoku:high": 6,
+    "mini_sudoku:low": 7,
+    "mini_sudoku:medium": 7
+  },
+  "seed": 0,
+  "solution_count_summary": {
+    "arithmetic24": {
+      "max": 8,
+      "mean": 7.05,
+      "min": 5
+    },
+    "grid_placement": {
+      "max": 8,
+      "mean": 6.05,
+      "min": 3
+    },
+    "maze": {
+      "max": 8,
+      "mean": 5.75,
+      "min": 3
+    },
+    "minesweeper_lite": {
+      "max": 8,
+      "mean": 4.7,
+      "min": 3
+    },
+    "mini_sudoku": {
+      "max": 8,
+      "mean": 5.2,
+      "min": 3
+    }
+  },
+  "source_file": "data/all_puzzles.jsonl"
+}

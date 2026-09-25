@@ -1,0 +1,65 @@
+{
+  "assignment_version": "human_fixed_battery_v2",
+  "bad_record_total_retention_limit": 30,
+  "bad_record_block_retention_limit": 14,
+  "module_retention_min_correct": 40,
+  "module_retention_min_module_correct": 2,
+  "quota_target_retained": 100,
+  "timing": {
+    "skip_unlock_ms": 90000,
+    "trial_timeout_ms": 120000,
+    "max_wrong_submits_per_paid_trial": 3,
+    "study_valid_window_minutes": 100
+  },
+  "practice": {
+    "enabled": true,
+    "num_trials": 3,
+    "count_quota": false,
+    "count_bonus": false
+  },
+  "attention_checks": {
+    "enabled": true,
+    "main_count": 3,
+    "module_count": 2,
+    "count_quota": false,
+    "count_bonus": false,
+    "fast_response_ms": 2000
+  },
+  "studies": {
+    "main": {
+      "name": "Human Reasoning - Main",
+      "participant_prefix": "M",
+      "recruit_target": 125,
+      "retained_target": 100,
+      "posted_base_reward_usd": 12.0,
+      "base_component_per_trial_usd": 0.12,
+      "correct_bonus_per_trial_usd": 0.1,
+      "estimated_time_min": 60,
+      "estimated_time_max": 75,
+      "study_valid_window_minutes": 100,
+      "assumed_seconds_per_trial": 30,
+      "max_trials": 100,
+      "completion_code": "MAIN_COMPLETE"
+    },
+    "module": {
+      "name": "Human Reasoning - Modules",
+      "participant_prefix": "E",
+      "recruit_target": 500,
+      "retained_target": 400,
+      "posted_base_reward_usd": 9.0,
+      "base_component_per_trial_usd": 0.145,
+      "correct_bonus_per_trial_usd": 0.1,
+      "estimated_time_min": 40,
+      "estimated_time_max": 55,
+      "study_valid_window_minutes": 70,
+      "assumed_seconds_per_trial": 30,
+      "min_trials": 61,
+      "max_trials": 62,
+      "completion_code": "MODULE_COMPLETE"
+    }
+  },
+  "platform_fees": {
+    "academic_nonprofit_markup": 0.333,
+    "corporate_markup": 0.428
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "image_prompt_v1": {
+    "file": "single_puzzle_image_prompt_v1.txt",
+    "sha256": "e2d76d337755ab848aa937475225eeaa32b5c72b28c38227d12f41a36995b0c7",
+    "prompt_condition": "direct_solve",
+    "input_kind": "single",
+    "applies_to": [
+      "main",
+      "cue",
+      "spatial",
+      "formulation",
+      "no_prime_B"
+    ],
+    "input_images": "one displayed puzzle image"
+  },
+  "image_sequence_prompt_v1": {
+    "file": "sequence_pair_transfer_image_prompt_v1.txt",
+    "sha256": "12876f8821761197e5648026fe3d3763171bb52816a8b839e2a61a467219327e",
+    "prompt_condition": "direct_solve",
+    "input_kind": "sequence",
+    "applies_to": [
+      "pair",
+      "transfer"
+    ],
+    "input_images": "one combined A/B image"
+  },
+  "human_participant_image_prompt_v1": {
+    "file": "single_puzzle_human_participant_prompt_v1.txt",
+    "sha256": "aa4c96361cc7b77471793281f35d9c16adfb9a870093a1b8e5ab1ef48391874c",
+    "prompt_condition": "human_participant",
+    "input_kind": "single",
+    "applies_to": [
+      "main",
+      "cue",
+      "spatial",
+      "formulation",
+      "no_prime_B"
+    ],
+    "input_images": "one displayed puzzle image"
+  },
+  "human_participant_sequence_prompt_v1": {
+    "file": "sequence_pair_transfer_human_participant_prompt_v1.txt",
+    "sha256": "69d4c76f212c71a544115c65d385d3810533cb90cf7855518ccf1e7c8dd04f28",
+    "prompt_condition": "human_participant",
+    "input_kind": "sequence",
+    "applies_to": [
+      "pair",
+      "transfer"
+    ],
+    "input_images": "one combined A/B image"
+  }
+}

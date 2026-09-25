@@ -1,0 +1,397 @@
+{
+  "schema_version": 1,
+  "target": "current paper folder, 23 September 2026",
+  "outputs": [
+    {
+      "kind": "figure",
+      "name": "fBboard_types",
+      "inputs": [
+        "stimuli/all_puzzles.jsonl",
+        "stimuli/modules/all_module_trials.jsonl",
+        "stimuli/modules/module_blocks.jsonl"
+      ],
+      "output": "figures/fBboard_types.png",
+      "public_input_class": "study_design",
+      "input_base": "data"
+    },
+    {
+      "kind": "figure",
+      "name": "fBboard_cue",
+      "inputs": [
+        "stimuli/all_puzzles.jsonl",
+        "stimuli/modules/all_module_trials.jsonl",
+        "stimuli/modules/module_blocks.jsonl"
+      ],
+      "output": "figures/fBboard_cue.png",
+      "public_input_class": "study_design",
+      "input_base": "data"
+    },
+    {
+      "kind": "figure",
+      "name": "fBboard_spatial",
+      "inputs": [
+        "stimuli/all_puzzles.jsonl",
+        "stimuli/modules/all_module_trials.jsonl",
+        "stimuli/modules/module_blocks.jsonl"
+      ],
+      "output": "figures/fBboard_spatial.png",
+      "public_input_class": "study_design",
+      "input_base": "data"
+    },
+    {
+      "kind": "figure",
+      "name": "fBboard_form",
+      "inputs": [
+        "stimuli/all_puzzles.jsonl",
+        "stimuli/modules/all_module_trials.jsonl",
+        "stimuli/modules/module_blocks.jsonl"
+      ],
+      "output": "figures/fBboard_form.png",
+      "public_input_class": "study_design",
+      "input_base": "data"
+    },
+    {
+      "kind": "figure",
+      "name": "fBboard_pair",
+      "inputs": [
+        "stimuli/all_puzzles.jsonl",
+        "stimuli/modules/all_module_trials.jsonl",
+        "stimuli/modules/module_blocks.jsonl"
+      ],
+      "output": "figures/fBboard_pair.png",
+      "public_input_class": "study_design",
+      "input_base": "data"
+    },
+    {
+      "kind": "figure",
+      "name": "fBboard_transfer",
+      "inputs": [
+        "stimuli/all_puzzles.jsonl",
+        "stimuli/modules/all_module_trials.jsonl",
+        "stimuli/modules/module_blocks.jsonl"
+      ],
+      "output": "figures/fBboard_transfer.png",
+      "public_input_class": "study_design",
+      "input_base": "data"
+    },
+    {
+      "kind": "figure",
+      "name": "fig_procedure",
+      "inputs": [
+        "study_design.json",
+        "procedure_geometry.json"
+      ],
+      "output": "figures/fig_procedure.pdf",
+      "public_input_class": "study_design",
+      "source_data": "source_data/fig_procedure.json",
+      "input_base": "figures/layouts"
+    },
+    {
+      "kind": "figure",
+      "name": "tv_source_geometry",
+      "inputs": [
+        "figure_statistics.json",
+        "source_geometry.json"
+      ],
+      "output": "figures/tv_source_geometry.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/tv_source_geometry.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "entropy_profile",
+      "inputs": [
+        "entropy_deficit_stats.json"
+      ],
+      "output": "figures/entropy_profile.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/entropy_profile.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "fig_presentation_context",
+      "inputs": [
+        "perturbation_statistics.json",
+        "gain_summaries.json",
+        "stimulus_sensitivity_stats.json"
+      ],
+      "output": "figures/fig_presentation_context.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/fig_presentation_context.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "fig5_relative_difficulty",
+      "inputs": [
+        "effort_difficulty_stats.json"
+      ],
+      "output": "figures/fig5_relative_difficulty.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/fig5_relative_difficulty.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "fig6_effort_prompting",
+      "inputs": [
+        "figure_statistics.json",
+        "condition_geometry.json"
+      ],
+      "output": "figures/fig6_effort_prompting.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/fig6_effort_prompting.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "context_mi_contrasts",
+      "inputs": [
+        "context_mi_summary.json"
+      ],
+      "output": "figures/context_mi_contrasts.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/context_mi_contrasts.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "entropy_correlation_pooled",
+      "inputs": [
+        "entropy_deficit_stats.json"
+      ],
+      "output": "figures/entropy_correlation_pooled.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/entropy_correlation_pooled.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "effort_svd_projection",
+      "inputs": [
+        "effort_difficulty_stats.json"
+      ],
+      "output": "figures/effort_svd_projection.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/effort_svd_projection.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "figure",
+      "name": "effort_difficulty_by_type",
+      "inputs": [
+        "effort_difficulty_stats.json"
+      ],
+      "output": "figures/effort_difficulty_by_type.pdf",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/effort_difficulty_by_type.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "tv_global_table",
+      "inputs": [
+        "figure_statistics.json"
+      ],
+      "output": "tables/tv_global_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/tv_global_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "alternative_divergence_tables",
+      "inputs": [
+        "figure_statistics.json"
+      ],
+      "output": "tables/alternative_divergence_tables.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/alternative_divergence_tables.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "tv_condition_contrasts",
+      "inputs": [
+        "figure_statistics.json"
+      ],
+      "output": "tables/tv_condition_contrasts.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/tv_condition_contrasts.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "entropy_deficit_table",
+      "inputs": [
+        "entropy_deficit_stats.json"
+      ],
+      "output": "tables/entropy_deficit_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/entropy_deficit_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "entropy_svd_table",
+      "inputs": [
+        "entropy_deficit_stats.json"
+      ],
+      "output": "tables/entropy_svd_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/entropy_svd_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "effort_correlation_table",
+      "inputs": [
+        "effort_difficulty_stats.json"
+      ],
+      "output": "tables/effort_correlation_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/effort_correlation_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "perturbation_tests",
+      "inputs": [
+        "perturbation_statistics.json"
+      ],
+      "output": "tables/perturbation_tests.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/perturbation_tests.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "cue_table",
+      "inputs": [
+        "normalized_attraction_stats.json"
+      ],
+      "output": "tables/cue_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/cue_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "spatial_table",
+      "inputs": [
+        "stimulus_sensitivity_stats.json"
+      ],
+      "output": "tables/spatial_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/spatial_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "pair_table",
+      "inputs": [
+        "context_dependence_table.json",
+        "stimulus_sensitivity_stats.json"
+      ],
+      "output": "tables/pair_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/pair_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "transfer_table",
+      "inputs": [
+        "stimulus_sensitivity_stats.json",
+        "normalized_attraction_stats.json"
+      ],
+      "output": "tables/transfer_table.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/transfer_table.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "context_mi_mean_p",
+      "inputs": [
+        "context_mi_summary.json"
+      ],
+      "output": "tables/context_mi_mean_p.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/context_mi_mean_p.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "feature_accuracy_overview",
+      "inputs": [
+        "arithmetic_feature_models.json",
+        "maze_three_feature_models.json",
+        "grid_feature_models.json",
+        "minesweeper_feature_models.json",
+        "sudoku_feature_models.json"
+      ],
+      "output": "tables/feature_accuracy_overview.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/feature_accuracy_overview.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "arithmetic_primary_tables",
+      "inputs": [
+        "arithmetic_feature_models.json"
+      ],
+      "output": "tables/arithmetic_primary_tables.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/arithmetic_primary_tables.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "maze_primary_tables",
+      "inputs": [
+        "maze_three_feature_models.json"
+      ],
+      "output": "tables/maze_primary_tables.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/maze_primary_tables.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "grid_primary_tables",
+      "inputs": [
+        "grid_feature_models.json"
+      ],
+      "output": "tables/grid_primary_tables.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/grid_primary_tables.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "minesweeper_primary_tables",
+      "inputs": [
+        "minesweeper_feature_models.json"
+      ],
+      "output": "tables/minesweeper_primary_tables.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/minesweeper_primary_tables.json",
+      "input_base": "numerical input directory"
+    },
+    {
+      "kind": "table",
+      "name": "sudoku_primary_tables",
+      "inputs": [
+        "sudoku_feature_models.json"
+      ],
+      "output": "tables/sudoku_primary_tables.tex",
+      "public_input_class": "display_summary",
+      "source_data": "source_data/sudoku_primary_tables.json",
+      "input_base": "numerical input directory"
+    }
+  ]
+}

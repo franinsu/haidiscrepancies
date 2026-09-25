@@ -1,0 +1,6 @@
+Solve the puzzle shown in the image.
+Return exactly one final answer line and nothing else.
+Your final line must exactly match the answer format shown in the image, including labels, punctuation, separators, and capitalization.
+Replace placeholders with your answer.
+Do not include any explanation, reasoning, preface, markdown, extra whitespace, or additional lines.
+Give the first correct answer that comes to mind.

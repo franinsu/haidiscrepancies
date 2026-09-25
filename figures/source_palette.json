@@ -1,0 +1,17 @@
+{
+  "name": "Cardinal + viridis",
+  "source_order": [
+    "Uniform",
+    "Human",
+    "GPT 5.6 Sol",
+    "Claude Opus 4.8",
+    "Gemini 3.5 Flash"
+  ],
+  "colors": [
+    "#777C84",
+    "#8C1515",
+    "#482878",
+    "#31688E",
+    "#21918C"
+  ]
+}

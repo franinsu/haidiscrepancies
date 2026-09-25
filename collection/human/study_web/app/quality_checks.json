@@ -1,0 +1,106 @@
+{
+  "practice": [
+    {
+      "id": "PRACTICE_SUDOKU_01",
+      "puzzle_type": "mini_sudoku",
+      "prompt_text": "Place the digit 4 in one empty cell where 4 is absent from the row, column, and box.",
+      "machine_readable_instance": {
+        "n": 4,
+        "box_rows": 2,
+        "box_cols": 2,
+        "digit": 4,
+        "board": [
+          "123.",
+          "341.",
+          ".123",
+          "2341"
+        ]
+      },
+      "is_practice": true
+    },
+    {
+      "id": "PRACTICE_GRID_01",
+      "puzzle_type": "grid_placement",
+      "prompt_text": "Place 3 tokens on this 4 by 4 board. No two tokens can share a row or column.",
+      "machine_readable_instance": {
+        "n": 4,
+        "m": 3,
+        "board": [
+          "XXX.",
+          "..X.",
+          "XXX.",
+          "...."
+        ]
+      },
+      "is_practice": true
+    },
+    {
+      "id": "PRACTICE_MINESWEEPER_01",
+      "puzzle_type": "minesweeper_lite",
+      "prompt_text": "Choose one ? cell that is definitely safe in every mine layout matching the numbers.",
+      "machine_readable_instance": {
+        "target_kind": "safe",
+        "board": [
+          "????",
+          "1F21",
+          "?2?1",
+          "?1??"
+        ]
+      },
+      "is_practice": true
+    }
+  ],
+  "attention": [
+    {
+      "id": "ATTENTION_SUDOKU_01",
+      "puzzle_type": "mini_sudoku",
+      "prompt_text": "Attention check: place the digit 1 in one empty cell where 1 is absent from the row, column, and box.",
+      "machine_readable_instance": {
+        "n": 4,
+        "box_rows": 2,
+        "box_cols": 2,
+        "digit": 1,
+        "board": [
+          ".234",
+          "341.",
+          "2143",
+          "432."
+        ]
+      },
+      "is_attention_check": true
+    },
+    {
+      "id": "ATTENTION_MINESWEEPER_01",
+      "puzzle_type": "minesweeper_lite",
+      "prompt_text": "Attention check: choose one ? cell that is definitely safe in every mine layout matching the numbers.",
+      "machine_readable_instance": {
+        "target_kind": "safe",
+        "board": [
+          "?01F",
+          "?12?",
+          "F1??",
+          "112?"
+        ]
+      },
+      "is_attention_check": true
+    },
+    {
+      "id": "ATTENTION_SUDOKU_02",
+      "puzzle_type": "mini_sudoku",
+      "prompt_text": "Attention check: place the digit 3 in one empty cell where 3 is absent from the row, column, and box.",
+      "machine_readable_instance": {
+        "n": 4,
+        "box_rows": 2,
+        "box_cols": 2,
+        "digit": 3,
+        "board": [
+          "....",
+          "..12",
+          "2143",
+          "4321"
+        ]
+      },
+      "is_attention_check": true
+    }
+  ]
+}

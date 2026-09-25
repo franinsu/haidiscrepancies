@@ -1,0 +1,57 @@
+# Only public study materials belong in Git. Human archives and ID maps,
+# model responses, and all other data folders stay local.
+/data/*
+!/data/stimuli/
+# PRIVATE GENERATED DATA: may contain participant-level human records. Keep local or delete;
+# these do not need a second private-cloud archive because they are reproducible.
+/intermediate/
+# RELEASE CANDIDATES: generated figures, tables and exported summaries.
+# Keep untracked until reviewed for public release.
+/results/
+# DEVELOPMENT ONLY: comparisons, old numerical snapshots and audit records.
+# Disposable once reproduction is accepted; separate from permanent tests/.
+/checks/
+# Protect recognizable raw exports even when saved outside their usual folders.
+participants.jsonl
+responses.jsonl
+assignments.jsonl
+quality_checks.jsonl
+payment_ledger.jsonl
+events.jsonl
+audit_events.jsonl
+id_map.csv*
+*_retained.jsonl
+raw.jsonl
+scored.jsonl
+final_summary.jsonl
+# Local execution files and credentials.
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.mplconfig/
+.cache/
+.DS_Store
+.env
+.env.*
+credentials*.json
+*_credentials.json
+secrets*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite*
+*.db
+*.db-*
+*.log
+*.aux
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.synctex.gz

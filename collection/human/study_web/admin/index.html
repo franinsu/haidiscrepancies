@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Study administration</title>
+  <link rel="icon" href="/study_web/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="admin.css" />
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <nav><a href="../app/?formal=1&amp;study=main">Main study</a> · <a href="../app/?formal=1&amp;study=module">Module study</a> · <a href="../admin_test/?study=main">Researcher test</a></nav>
+  <main>
+    <h1>Study administration</h1>
+    <section id="loginPanel">
+      <label>Admin name <input id="adminName" autocomplete="username" /></label>
+      <label>Password <input id="adminPassword" type="password" autocomplete="current-password" /></label>
+      <button id="loginBtn" type="button">Sign in</button>
+      <p id="loginStatus" role="status"></p>
+    </section>
+    <section id="adminPanel" class="hidden">
+      <p id="collectionStatus" role="status"></p>
+      <p>Exports contain private participant records. Store them with the restricted study data.</p>
+      <label>Study <select id="cohort"><option value="main">Main</option><option value="module">Module</option></select></label>
+      <label>Records <select id="table"><option value="participants">Participants</option><option value="responses">Responses</option><option value="assignments">Assignments</option><option value="quality_checks">Quality checks</option><option value="payment_ledger">Payment ledger</option><option value="events">Events</option><option value="audit_events">Audit events</option></select></label>
+      <button id="exportBtn" type="button">Download JSONL</button>
+      <button id="backupBtn" type="button">Back up database</button>
+      <button id="logoutBtn" type="button">Sign out</button>
+      <p id="actionStatus" role="status"></p>
+    </section>
+  </main>
+</body>
+</html>

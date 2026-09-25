@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "reference_paper_commit": "cd1119c4b9f5460b3802d65d4736eebd05749c4f",
+  "reference_paper_revision": "0923, 23 September 2026",
+  "parser": "response_parser_v4",
+  "primary_condition": {
+    "model_effort": "low",
+    "prompt": "direct_solve"
+  },
+  "ai_providers": [
+    "openai",
+    "anthropic",
+    "gemini"
+  ],
+  "puzzle_families": [
+    "arithmetic24",
+    "maze",
+    "grid_placement",
+    "minesweeper_lite",
+    "mini_sudoku"
+  ],
+  "main_puzzles": 100,
+  "module_trials": 170,
+  "model_raw_requests": 288000,
+  "model_scored_trials": 324000,
+  "human_retained_participants": {
+    "main": 104,
+    "module": 417
+  },
+  "human_retained_trials": {
+    "main": 10400,
+    "module": 25647
+  },
+  "raw_human_location": "data/private",
+  "raw_ai_location": "data/ai",
+  "human_publication_rule": "Only summary statistics underlying paper figures and tables; no raw or participant-level records.",
+  "numerical_policy": "Fully specified reproducible calculations; document small differences from unrecoverable historical random realizations."
+}
