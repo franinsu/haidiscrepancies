@@ -77,7 +77,7 @@ def run(input_dir, output_dir, stimuli_dir, *, only=None, reference=False, previ
     artwork, source_data = output_dir/'figures', output_dir/'source_data'
     board_names={name for name in names if name.startswith('fBboard')}
     if board_names:
-        stimuli.stimulus_figures(stimuli_dir, artwork, only=board_names)
+        stimuli.stimulus_figures(stimuli_dir, artwork, only=board_names, previews=previews)
         for path in ['all_puzzles.jsonl','modules/all_module_trials.jsonl','modules/module_blocks.jsonl']:
             hashes['stimuli/'+path]=sha(stimuli_dir/path)
     for name in sorted(names-board_names):

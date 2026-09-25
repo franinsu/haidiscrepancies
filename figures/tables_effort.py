@@ -15,7 +15,7 @@ def render_correlation_table(data: dict[str, Any]) -> str:
     lines = [
         "% Generated log-effort correlation table.",
         "% Do not edit numerical cells by hand.",
-        "\\begin{table}[!b]",
+        "\\begin{table}[!htbp]",
         "  \\caption{Pearson correlation of per-puzzle relative-difficulty scores",
         "  by puzzle family.  The Mean column weights the five family correlations",
         "  equally.  Brackets are 95\\% paired-puzzle bootstrap intervals.}",

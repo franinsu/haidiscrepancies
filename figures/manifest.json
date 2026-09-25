@@ -10,7 +10,7 @@
         "stimuli/modules/all_module_trials.jsonl",
         "stimuli/modules/module_blocks.jsonl"
       ],
-      "output": "figures/fBboard_types.png",
+      "output": "figures/fBboard_types.pdf",
       "public_input_class": "study_design",
       "input_base": "data"
     },
@@ -22,7 +22,7 @@
         "stimuli/modules/all_module_trials.jsonl",
         "stimuli/modules/module_blocks.jsonl"
       ],
-      "output": "figures/fBboard_cue.png",
+      "output": "figures/fBboard_cue.pdf",
       "public_input_class": "study_design",
       "input_base": "data"
     },
@@ -34,7 +34,7 @@
         "stimuli/modules/all_module_trials.jsonl",
         "stimuli/modules/module_blocks.jsonl"
       ],
-      "output": "figures/fBboard_spatial.png",
+      "output": "figures/fBboard_spatial.pdf",
       "public_input_class": "study_design",
       "input_base": "data"
     },
@@ -46,7 +46,7 @@
         "stimuli/modules/all_module_trials.jsonl",
         "stimuli/modules/module_blocks.jsonl"
       ],
-      "output": "figures/fBboard_form.png",
+      "output": "figures/fBboard_form.pdf",
       "public_input_class": "study_design",
       "input_base": "data"
     },
@@ -58,7 +58,7 @@
         "stimuli/modules/all_module_trials.jsonl",
         "stimuli/modules/module_blocks.jsonl"
       ],
-      "output": "figures/fBboard_pair.png",
+      "output": "figures/fBboard_pair.pdf",
       "public_input_class": "study_design",
       "input_base": "data"
     },
@@ -70,7 +70,7 @@
         "stimuli/modules/all_module_trials.jsonl",
         "stimuli/modules/module_blocks.jsonl"
       ],
-      "output": "figures/fBboard_transfer.png",
+      "output": "figures/fBboard_transfer.pdf",
       "public_input_class": "study_design",
       "input_base": "data"
     },

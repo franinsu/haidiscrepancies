@@ -62,7 +62,7 @@ class FigureTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output=Path(folder)/'result'
             run(Path(folder)/'inputs',output,ROOT/'data/stimuli',only=['fBboard_types'])
-            self.assertEqual({p.name for p in (output/'figures').iterdir()},{'fBboard_types.png'})
+            self.assertEqual({p.name for p in (output/'figures').iterdir()},{'fBboard_types.pdf'})
 
     def test_reference_mode_is_explicit(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -142,7 +142,7 @@ def draw_number_row(
         offset = 1.104274 if types_page else 1.475712
         pagella_text(ax, left + cell / 2, y + cell / 2 - offset, str(number), size=10.0, bold=True, ha="center", va="center", color=INK)
 
-def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
+def stimulus_figures(project: Path, out: Path, *, only=None, previews=False) -> None:
     def save_page(fig, path):
         if only is None or path.stem in only:
             fig.set_dpi(300)
@@ -153,8 +153,11 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
                           for ax in fig.axes for text in ax.texts
                           for point in text.get_window_extent(renderer).get_points())
             # Preserve the paper's canvas unless a wider font needs more room.
-            fig.savefig(path,facecolor='white',bbox_inches='tight' if clipped else None,
-                        pad_inches=.02 if clipped else 0,dpi=300)
+            options = dict(facecolor='white', bbox_inches='tight' if clipped else None,
+                           pad_inches=.02 if clipped else 0, dpi=300)
+            fig.savefig(path, metadata={'CreationDate': None, 'ModDate': None}, **options)
+            if previews:
+                fig.savefig(path.with_suffix('.png'), **options)
         plt.close(fig)
 
     puzzles, blocks = load_project(project)
@@ -171,7 +174,7 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
     draw_board_page(ax, puzzles["SUD_0003_CAN"], 399.741545, 18.183269, 66.835443, 66.835443, coordinates=True, types_page=True)
     for center, title in zip((47.81952, 142.859519, 243.079267, 338.119267, 433.159267), ("Arithmetic", "Maze", "Rooks", "Minesweeper", "Sudoku")):
         pagella_text(ax, center, 3.65875, title, size=8.6, bold=True, ha="center", va="baseline", color=INK)
-    save_page(fig, out / "fBboard_types.png")
+    save_page(fig, out / "fBboard_types.pdf")
 
     # Cue module.
     fig, ax = page_canvas(372.7145106, 185.04)
@@ -193,7 +196,7 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
         pagella_text(ax, center, 177.146875, title, size=8.6, bold=True, ha="center", va="baseline", color=INK)
     pagella_text(ax, 52.393125, 132.48, "Minesweeper", size=8.2, bold=True, ha="right", va="center", color=INK)
     pagella_text(ax, 52.393125, 41.76, "Sudoku", size=8.2, bold=True, ha="right", va="center", color=INK)
-    save_page(fig, out / "fBboard_cue.png")
+    save_page(fig, out / "fBboard_cue.pdf")
 
     # Spatial transformations.
     fig, ax = page_canvas(457.2524658, 185.04)
@@ -211,7 +214,7 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
         pagella_text(ax, center, 177.146875, title, size=8.6, bold=True, ha="center", va="baseline", color=INK)
     pagella_text(ax, 52.393125, 132.48, "Minesweeper", size=8.2, bold=True, ha="right", va="center", color=INK)
     pagella_text(ax, 52.393125, 41.76, "Sudoku", size=8.2, bold=True, ha="right", va="center", color=INK)
-    save_page(fig, out / "fBboard_spatial.png")
+    save_page(fig, out / "fBboard_spatial.pdf")
 
     # Arithmetic formulation/order manipulation.
     block = by_module_type[("formulation", "arithmetic24")][0]
@@ -221,7 +224,7 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
         numbers = instance.get("display_numbers") or instance.get("numbers")
         draw_number_row(ax, numbers, left, 10.884557, 25.382246, 4.131994)
         pagella_text(ax, center, 53.842555, title, size=8.6, bold=True, ha="center", va="baseline", color=INK)
-    save_page(fig, out / "fBboard_form.png")
+    save_page(fig, out / "fBboard_form.pdf")
 
     # Pair: B alone, unrelated A/B, related A/B.
     pair_groups: dict[tuple[str, str], dict[str, dict[str, Any]]] = defaultdict(dict)
@@ -245,7 +248,7 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
         pagella_text(ax, center, 167.066875, title, size=8.6, bold=True, ha="center", va="baseline", color=INK)
     pagella_text(ax, 52.393125, 124.92, "Minesweeper", size=8.2, bold=True, ha="right", va="center", color=INK)
     pagella_text(ax, 52.393125, 39.24, "Sudoku", size=8.2, bold=True, ha="right", va="center", color=INK)
-    save_page(fig, out / "fBboard_pair.png")
+    save_page(fig, out / "fBboard_pair.pdf")
 
     transfer_groups: dict[tuple[str, str], dict[str, dict[str, Any]]] = defaultdict(dict)
     for block in blocks:
@@ -266,4 +269,4 @@ def stimulus_figures(project: Path, out: Path, *, only=None) -> None:
     pagella_text(ax, 267.598245, 197.369375, "primer puzzle A + target puzzle B", size=8.6, bold=True, ha="center", va="baseline", color=INK)
     pagella_text(ax, 52.393125, 147.6, "Minesweeper", size=8.2, bold=True, ha="right", va="center", color=INK)
     pagella_text(ax, 52.393125, 46.8, "Sudoku", size=8.2, bold=True, ha="right", va="center", color=INK)
-    save_page(fig, out / "fBboard_transfer.png")
+    save_page(fig, out / "fBboard_transfer.pdf")
