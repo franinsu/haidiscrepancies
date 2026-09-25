@@ -11,6 +11,9 @@ import math
 from collections import Counter
 from typing import Mapping
 
+import numpy as np
+from scipy.special import entr, rel_entr
+
 Distribution = Mapping[str, float]
 
 
@@ -30,13 +33,13 @@ def tv(left: Counter[str] | Distribution, right: Counter[str] | Distribution) ->
 def js(left: Counter[str] | Distribution, right: Counter[str] | Distribution) -> float:
     """Base-2 Jensen--Shannon divergence, in bits."""
     a, b = distribution(left), distribution(right)
-    keys = set(a) | set(b)
-    midpoint = {key: (a.get(key, 0.0) + b.get(key, 0.0)) / 2 for key in keys}
-
-    def kl(p: dict[str, float]) -> float:
-        return sum(value * math.log2(value / midpoint[key]) for key, value in p.items() if value)
-
-    return 0.5 * kl(a) + 0.5 * kl(b)
+    keys = sorted(set(a) | set(b))
+    p, q = (np.asarray([d.get(key, 0.0) for key in keys]) for d in (a, b))
+    midpoint = (p + q) / 2
+    divergence = float((rel_entr(p, midpoint).sum() + rel_entr(q, midpoint).sum()) / (2 * math.log(2)))
+    # Nearly identical distributions can round below zero. Preserve nonfinite
+    # values so that invalid inputs cannot turn into a zero distance.
+    return max(divergence, 0.0) if math.isfinite(divergence) else divergence
 
 
 def js_distance(left: Counter[str] | Distribution, right: Counter[str] | Distribution) -> float:
@@ -55,7 +58,9 @@ def hellinger(left: Counter[str] | Distribution, right: Counter[str] | Distribut
 def entropy(counter: Counter[str] | Distribution) -> float:
     """Plug-in Shannon entropy in bits."""
     p = distribution(counter)
-    return -sum(value * math.log2(value) for value in p.values() if value)
+    # entr preserves supplied probability masses, including an empty sample;
+    # stats.entropy would renormalize mappings a second time.
+    return float(entr(list(p.values())).sum() / math.log(2))
 
 
 def mass(counter: Counter[str] | Distribution, targets: set[str] | frozenset[str]) -> float:

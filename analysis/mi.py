@@ -16,6 +16,7 @@ import json
 
 
 import numpy as np
+from scipy.stats import permutation_test
 
 
 from .metrics import mutual_information
@@ -43,7 +44,18 @@ def mi_permutation_null(pairs: list[tuple[str, str]], draws: int, rng: np.random
         raise ValueError("vectorized mutual information disagrees with the reference implementation")
     if draws <= 0:
         return 0.0, np.zeros(0)
-    null = np.array([_mi_from_indices(a_index, rng.permutation(b_index), len(a_labels), len(b_labels)) for _ in range(draws)])
+    def statistic(permuted_b):
+        return _mi_from_indices(a_index, permuted_b, len(a_labels), len(b_labels))
+
+    if len(pairs) < 2 or draws >= math.factorial(len(pairs)):
+        # Keep the requested Monte Carlo draws; SciPy otherwise enumerates
+        # small samples exactly (and does not accept a singleton sample).
+        null = np.array([statistic(rng.permutation(b_index)) for _ in range(draws)])
+    else:
+        null = permutation_test(
+            (b_index,), statistic, permutation_type="pairings",
+            alternative="greater", n_resamples=draws, vectorized=False, rng=rng,
+        ).null_distribution
     return float(null.mean()), null
 
 
@@ -111,6 +123,8 @@ def compute_tests(counts, draws=2000, base_seed=0):
             rng = np.random.Generator(np.random.PCG64(seed))
             observed = mutual_information(pairs)
             null_mean, null = mi_permutation_null(pairs, draws, rng)
+            # Preserve the study's absolute tie tolerance and Monte Carlo +1
+            # correction rather than SciPy's relative-tolerance p-value.
             exceedances = int(np.count_nonzero(null >= observed - 1e-15))
             records.append(dict(source=source, block=comparison['block'], family=comparison['family'],
                 arm=comparison['arm'], preceding_trial=comparison['preceding'],

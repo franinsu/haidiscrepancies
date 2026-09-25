@@ -29,6 +29,38 @@ def paired_fixture():
 
 
 class AnalysisMethodTests(unittest.TestCase):
+    def test_entropy_in_bits_preserves_counts_zeros_and_empty_samples(self):
+        for value in (Counter(a=5, b=5, c=0), {'a': .5, 'b': .5, 'c': 0}):
+            self.assertAlmostEqual(metrics.entropy(value), 1)
+        self.assertEqual(metrics.entropy(Counter(a=3)), 0)
+        self.assertEqual(metrics.entropy(Counter()), 0)
+
+    def test_js_aligns_support_and_distinguishes_distance_from_divergence(self):
+        left, right = Counter(a=5, b=5), Counter(b=5, c=5)
+        self.assertAlmostEqual(metrics.js(left, right), .5)
+        self.assertAlmostEqual(metrics.js_distance(left, right), np.sqrt(.5))
+        self.assertEqual(metrics.js(Counter(a=3), Counter(b=9)), 1)
+        self.assertEqual(metrics.js(left, left), 0)
+        self.assertEqual(metrics.js({}, {}), 0)
+        self.assertAlmostEqual(metrics.js({}, {'a': 1}), .5)
+
+    def test_percentile_interpolation_includes_endpoints_and_ties(self):
+        values = [10, 0, 0, 2, 4]
+        self.assertEqual(main_statistics.q(values, 0), 0)
+        self.assertEqual(main_statistics.q(values, 1), 10)
+        self.assertAlmostEqual(main_statistics.q(values, .625), 3)
+
+    def test_js_distance_remains_defined_for_nearly_identical_distributions(self):
+        left = dict(zip('abcdef', [.02088703330133172, .6091260857358012,
+                                  .20972096457154824, .014760511099673716,
+                                  .0912651976684829, .054240207623162257]))
+        right = {**left, 'a': .02088703330133221, 'b': .6091260857358007}
+        distance = metrics.js_distance(left, right)
+        self.assertTrue(np.isfinite(distance))
+        self.assertGreaterEqual(distance, 0)
+        self.assertLess(distance, 1e-7)
+        self.assertTrue(np.isnan(metrics.js({'a': float('nan')}, {'a': 1})))
+
     def test_tv_is_probability_mass_not_euclidean_distance(self):
         self.assertAlmostEqual(metrics.tv(Counter({'a':5,'b':5}),Counter({'b':5,'c':5})),.5)
         self.assertEqual(metrics.tv(Counter({'a':3}),Counter({'b':9})),1)

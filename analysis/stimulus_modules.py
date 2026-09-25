@@ -8,9 +8,6 @@ from __future__ import annotations
 import json
 
 
-import random
-
-
 from collections import Counter, defaultdict
 
 
@@ -24,6 +21,8 @@ from typing import Any, Callable, Iterable
 
 
 import numpy as np
+
+from . import resampling
 
 
 MODULE_ORDER = ("cue", "spatial", "formulation", "pair", "transfer")
@@ -548,12 +547,7 @@ def bootstrap_draws(stratum_sizes: tuple[int, ...], repeats: int = None, seed: i
     """Stratified block-index draws; the stream matches the established pipeline."""
     if repeats is None:
         repeats = BOOTSTRAP_REPEATS
-    rng = random.Random(seed)
-    offsets = np.cumsum((0, *stratum_sizes[:-1]))
-    return np.asarray(
-        [[int(offset) + rng.randrange(size) for offset, size in zip(offsets, stratum_sizes) for _ in range(size)] for _ in range(repeats)],
-        dtype=int,
-    )
+    return resampling.stratified_indices(stratum_sizes, repeats=repeats, seed=seed)
 
 
 def summarize_blocks(values_by_family: dict[str, float], strata: list[tuple[str, list[str]]], draws: np.ndarray) -> dict[str, Any]:

@@ -3,10 +3,9 @@ import hashlib
 
 import json
 
-import random
-
-
 import numpy as np
+
+from . import resampling
 
 NBOOT=5000
 
@@ -27,8 +26,8 @@ def rng_for(*parts):
     return np.random.Generator(np.random.PCG64(seed))
 
 def bootstrap(groups):
-    sizes=[len(v) for v in groups];rng=random.Random(0);offsets=np.cumsum([0]+sizes[:-1])
-    draws=np.array([[o+rng.randrange(n) for o,n in zip(offsets,sizes) for _ in range(n)] for _ in range(NBOOT)])
+    sizes=[len(v) for v in groups]
+    draws=resampling.stratified_indices(tuple(sizes),repeats=NBOOT,seed=0)
     values=np.concatenate(groups);cuts=np.cumsum([0]+sizes)
     sampled=np.mean([values[draws[:,cuts[i]:cuts[i+1]]].mean(axis=1) for i in range(len(groups))],axis=0)
     return [float(x) for x in np.quantile(sampled,[.025,.975])]

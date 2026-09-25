@@ -1,6 +1,7 @@
 """Six pooled entropy correlations quoted in the supplement."""
 from itertools import combinations
 import numpy as np
+from scipy.stats import pearsonr
 from .entropy import SOURCES, PUZZLE_TYPES
 
 
@@ -15,11 +16,10 @@ def compute_entropy_correlations(entropy_stats):
     results = {}
     for left,right in combinations(SOURCES,2):
         x,y = [np.asarray([entropy_stats['values_by_puzzle'][source][p] for p in order]) for source in (left,right)]
-        x,y = x-x.mean(),y-y.mean()
-        denominator = np.sqrt(np.sum(x*x)*np.sum(y*y))
-        if not np.isfinite(denominator) or denominator<=0:
+        if (not np.isfinite(x).all() or not np.isfinite(y).all()
+                or np.ptp(x) == 0 or np.ptp(y) == 0):
             raise ValueError('Undefined pooled entropy correlation')
-        results[left+'|'+right] = {'sources':[left,right],'pooled':{'estimate':float(np.sum(x*y)/denominator),'n_puzzles':100}}
+        results[left+'|'+right] = {'sources':[left,right],'pooled':{'estimate':float(pearsonr(x,y).statistic),'n_puzzles':100}}
     return {'metric':'Pearson correlation across all 100 paired puzzle entropies','results':results,
             'primary_condition':{'effort':'low','prompt':'plain'},
             'uniform_excluded':'Constant normalized entropy gives undefined correlation'}

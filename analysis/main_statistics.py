@@ -11,9 +11,6 @@ import json
 import math
 
 
-import random
-
-
 from collections import Counter, defaultdict
 
 
@@ -27,9 +24,10 @@ from typing import Any, Callable, Iterable
 
 
 import numpy as np
+from scipy.stats import pearsonr
 
 
-from . import stimulus_modules
+from . import resampling, stimulus_modules
 
 
 from .metrics import entropy, hellinger, js_distance, tv
@@ -120,17 +118,13 @@ def tie_aware_modal_agreement(
 
 
 def q(values: list[float], probability: float) -> float:
-    ordered = sorted(values)
-    position = (len(ordered) - 1) * probability
-    lo, hi = math.floor(position), math.ceil(position)
-    return ordered[lo] + (ordered[hi] - ordered[lo]) * (position - lo)
+    return float(np.quantile(values, probability, method="linear"))
 
 
 def pearson(left: list[float], right: list[float]) -> float:
-    lx, ly = mean(left), mean(right)
-    numerator = sum((x - lx) * (y - ly) for x, y in zip(left, right))
-    denominator = math.sqrt(sum((x - lx) ** 2 for x in left) * sum((y - ly) ** 2 for y in right))
-    return numerator / denominator if denominator else float("nan")
+    if len(set(left)) < 2 or len(set(right)) < 2:
+        return float("nan")
+    return float(pearsonr(left, right).statistic)
 
 
 def condition_key(provider: str, effort: str, prompt: str) -> str:
@@ -196,16 +190,7 @@ def cluster_bootstrap_draws(
     """Sample stimulus families within fixed design strata."""
     if repeats is None:
         repeats = TV_BOOTSTRAP_REPEATS
-    rng = random.Random(seed)
-    ordered_strata = sorted(clusters_by_stratum)
-    draws: list[list[tuple[str, ...]]] = []
-    for _ in range(repeats):
-        sampled: list[tuple[str, ...]] = []
-        for stratum in ordered_strata:
-            clusters = clusters_by_stratum[stratum]
-            sampled.extend(clusters[rng.randrange(len(clusters))] for _ in clusters)
-        draws.append(sampled)
-    return draws
+    return resampling.cluster_draws(clusters_by_stratum, repeats=repeats, seed=seed)
 
 
 def clustered_mean_ci(

@@ -8,9 +8,6 @@ from __future__ import annotations
 import math
 
 
-import random
-
-
 import re
 
 
@@ -21,6 +18,8 @@ from typing import Any
 
 
 import numpy as np
+
+from . import resampling
 
 
 SOURCES = ("Human", "GPT 5.6 Sol", "Claude Opus 4.8", "Gemini 3.5 Flash")
@@ -170,16 +169,9 @@ def cluster_bootstrap_draws(
     clusters_by_stratum: dict[tuple[str, str, str], list[tuple[str, ...]]],
 ) -> list[list[tuple[str, ...]]]:
     """Resample stimulus families within each fixed design stratum."""
-    rng = random.Random(BOOTSTRAP_SEED)
-    ordered_strata = sorted(clusters_by_stratum)
-    draws: list[list[tuple[str, ...]]] = []
-    for _ in range(BOOTSTRAP_REPEATS):
-        sampled: list[tuple[str, ...]] = []
-        for stratum in ordered_strata:
-            clusters = clusters_by_stratum[stratum]
-            sampled.extend(clusters[rng.randrange(len(clusters))] for _ in clusters)
-        draws.append(sampled)
-    return draws
+    return resampling.cluster_draws(
+        clusters_by_stratum, repeats=BOOTSTRAP_REPEATS, seed=BOOTSTRAP_SEED
+    )
 
 
 def clustered_mean_ci(

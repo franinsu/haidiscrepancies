@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 import numpy as np
+from scipy.special import expit
 from . import DEFAULT_L2_PENALTY
 from .constant_feature_means import ConstantFeatureMeans
 from .regression_optimizer import LogitObjective, damped_newton, method_metadata
@@ -57,15 +58,6 @@ def read_jsonl(path: Path) -> Iterable[dict[str, Any]]:
         for line in handle:
             if line.strip():
                 yield json.loads(line)
-
-
-def expit(value: np.ndarray) -> np.ndarray:
-    result = np.empty_like(value, dtype=float)
-    positive = value >= 0
-    result[positive] = 1.0 / (1.0 + np.exp(-value[positive]))
-    negative_exp = np.exp(value[~positive])
-    result[~positive] = negative_exp / (1.0 + negative_exp)
-    return result
 
 
 def percentile_interval(values: list[float]) -> list[float]:
