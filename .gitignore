@@ -1,5 +1,5 @@
-# Only public study materials belong in Git. Human archives and ID maps,
-# model responses, and all other data folders stay local.
+# Public study materials and the explicitly listed model exports belong in Git.
+# Human archives, ID maps and all other data folders stay local.
 /data/*
 !/data/stimuli/
 # PRIVATE GENERATED DATA: may contain participant-level human records. Keep local or delete;
@@ -12,8 +12,8 @@
 # Disposable once reproduction is accepted; separate from permanent tests/.
 /checks/
 # Protect recognizable raw exports even when saved outside their usual folders.
-participants.jsonl
-responses.jsonl
+participants.jsonl*
+responses.jsonl*
 assignments.jsonl
 quality_checks.jsonl
 payment_ledger.jsonl
@@ -24,6 +24,24 @@ id_map.csv*
 raw.jsonl
 scored.jsonl
 final_summary.jsonl
+# Only the five reviewed, compressed model exports and their manifest are public.
+# New collection runs and original provider manifests remain ignored.
+!/data/ai/
+/data/ai/**
+!/data/ai/manifest.json
+!/data/ai/openai/
+!/data/ai/openai/main/
+!/data/ai/openai/module/
+!/data/ai/anthropic/
+!/data/ai/anthropic/main/
+!/data/ai/anthropic/module/
+!/data/ai/gemini/
+!/data/ai/gemini/formal/
+!/data/ai/openai/main/responses.jsonl.gz
+!/data/ai/openai/module/responses.jsonl.gz
+!/data/ai/anthropic/main/responses.jsonl.gz
+!/data/ai/anthropic/module/responses.jsonl.gz
+!/data/ai/gemini/formal/responses.jsonl.gz
 # Local execution files and credentials.
 .venv/
 venv/

@@ -31,7 +31,7 @@
     "main": 10400,
     "module": 25647
   },
-  "raw_human_location": "data/private",
+  "raw_human_location": "data/human",
   "raw_ai_location": "data/ai",
   "human_publication_rule": "Only summary statistics underlying paper figures and tables; no raw or participant-level records.",
   "numerical_policy": "Fully specified reproducible calculations; document small differences from unrecoverable historical random realizations."

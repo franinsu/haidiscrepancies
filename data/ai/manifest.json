@@ -1,0 +1,40 @@
+{
+  "description": "Recorded model responses; provider payloads and run/batch manifests omitted.",
+  "files": {
+    "anthropic/main/responses.jsonl.gz": {
+      "bytes": 2486040,
+      "original_sha256": "208b95074b805031776e71c57c5dfda322fbfdd3b568fd5aa46f0a9492cf4270",
+      "requests": 40000,
+      "sha256": "43b08a727448ec3bc39b168a28ad2d3baf4da0c8d58889e1c91440bd326b382c"
+    },
+    "anthropic/module/responses.jsonl.gz": {
+      "bytes": 3532817,
+      "original_sha256": "84f53d46d35fb7f487a18df2cdf6c8e614b34fd83464b42a0392a70a6fbcbb94",
+      "requests": 56000,
+      "sha256": "a9d07a124a7515c3a0f159d3c1fdac13b87131d631b657e7c2e3cf97742f9a8b"
+    },
+    "gemini/formal/responses.jsonl.gz": {
+      "bytes": 6338105,
+      "original_sha256": "d0a19c4698f190d84a036d0d04320abe3895f64ab91478733d19fa3f4a60f507",
+      "requests": 96000,
+      "sha256": "c804efd5d6f842eb26db374426a54ab8cf59466633b0e4106d6950f26469398e"
+    },
+    "openai/main/responses.jsonl.gz": {
+      "bytes": 1833241,
+      "original_sha256": "5568bbfcce262d0f205827a092de70df9cbdd7fa4d5bf1bcb4ba32d4fa2f42b5",
+      "requests": 40000,
+      "sha256": "131bc74cd71ce6e7be9e4a55b4ff83c542d5ce2b05504be70dc31eda8500544a"
+    },
+    "openai/module/responses.jsonl.gz": {
+      "bytes": 2573562,
+      "original_sha256": "ce6ab3202f19daa473f744f80c6e04bf4a9fcf388f2a479fc46ff31204d21e91",
+      "requests": 56000,
+      "sha256": "8a21ee78d8d7bb927a5115ecf33a7da974bb8cac4b4c97cca9fd519e4a8812e4"
+    }
+  },
+  "removed_fields": [
+    "provider_response_id",
+    "provider_response_json"
+  ],
+  "schema_version": 1
+}

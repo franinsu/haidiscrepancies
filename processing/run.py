@@ -13,18 +13,12 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from processing import human, response_parser, score_responses as scoring
+from puzzles.common import iter_jsonl as json_rows
 
 
 def sha256(path):
     with path.open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
-
-
-def json_rows(path):
-    with path.open(encoding='utf-8') as stream:
-        for line in stream:
-            if line.strip():
-                yield json.loads(line)
 
 
 def model_inputs(data_dir):
@@ -33,7 +27,14 @@ def model_inputs(data_dir):
             stimuli = data_dir / 'stimuli'
             data = stimuli / ('all_puzzles.jsonl' if cohort == 'main' else 'modules/all_module_trials.jsonl')
             catalog = stimuli / ('solution_catalog.jsonl' if cohort == 'main' else 'modules/solution_catalog_modules.jsonl')
-            responses = data_dir / 'ai' / provider / ('formal' if provider == 'gemini' else cohort) / 'responses.jsonl'
+            directory = data_dir / 'ai' / provider / ('formal' if provider == 'gemini' else cohort)
+            candidates = [directory / name for name in ('responses.jsonl', 'responses.jsonl.gz')]
+            available = [path for path in candidates if path.is_file()]
+            if len(available) > 1:
+                raise ValueError(f'Ambiguous model inputs in {directory}: keep only responses.jsonl or responses.jsonl.gz')
+            if not available:
+                raise FileNotFoundError(f'Missing model responses: expected {candidates[0]} or {candidates[1]}')
+            responses = available[0]
             yield provider, cohort, data, catalog, responses
 
 
@@ -71,7 +72,7 @@ def process_humans(data_dir, output):
     destination.mkdir(parents=True, exist_ok=True)
     summary = {}
     for cohort in ('main', 'module'):
-        archive = data_dir / 'private' / cohort
+        archive = data_dir / 'human' / cohort
         participants = human.read_jsonl(archive / 'participants.jsonl')
         raw_rows = human.payloads(archive)
         retained = human.retained_users(cohort, participants, raw_rows)
@@ -92,12 +93,12 @@ def run(data_dir, output_dir=None, stage='all', limit=None):
         raise ValueError('stage must be human, models, or all')
     if limit is not None and (limit < 1 or stage != 'models'):
         raise ValueError('--limit requires stage models, a positive count, and a separate --output-dir')
-    protected = [data_dir / name for name in ['private', 'ai', 'stimuli']]
+    protected = [data_dir / name for name in ['human', 'ai', 'stimuli']]
     if any(output.is_relative_to(path.resolve()) or path.resolve().is_relative_to(output) for path in protected):
         raise ValueError('Output must be separate from raw human/model inputs and study materials')
     required = []
     if stage in {'human', 'all'}:
-        required += [data_dir / 'private' / cohort / name for cohort in ['main', 'module']
+        required += [data_dir / 'human' / cohort / name for cohort in ['main', 'module']
                      for name in ['participants.jsonl', 'responses.jsonl']]
     if stage in {'models', 'all'}:
         required += [path for _, _, data, catalog, responses in model_inputs(data_dir)

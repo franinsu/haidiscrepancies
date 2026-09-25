@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import math
@@ -54,9 +55,16 @@ def write_jsonl(path: str, rows: Iterable[Puzzle]) -> None:
             f.write(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n")
 
 
+def iter_jsonl(path: str) -> Iterable[Puzzle]:
+    opener = gzip.open if os.fspath(path).endswith(".gz") else open
+    with opener(path, "rt", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                yield json.loads(line)
+
+
 def read_jsonl(path: str) -> List[Puzzle]:
-    with open(path, "r", encoding="utf-8") as f:
-        return [json.loads(line) for line in f if line.strip()]
+    return list(iter_jsonl(path))
 
 
 def bucket_counts(

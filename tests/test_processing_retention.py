@@ -57,11 +57,11 @@ class RetentionTests(unittest.TestCase):
     def test_processing_refuses_raw_output_and_partial_human_cohort(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as directory:
             data = Path(directory)
-            for name in ['private', 'ai', 'stimuli']:
+            for name in ['human', 'ai', 'stimuli']:
                 with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'separate'):
                     run(data, data/name/'output', stage='human')
-            (data/'private').mkdir()
-            (data/'alias').symlink_to(data/'private', target_is_directory=True)
+            (data/'human').mkdir()
+            (data/'alias').symlink_to(data/'human', target_is_directory=True)
             with self.assertRaisesRegex(ValueError, 'separate'):
                 run(data, data/'alias/output', stage='human')
             with self.assertRaisesRegex(ValueError, '--limit'):

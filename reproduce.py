@@ -118,7 +118,8 @@ def main():
     anonymize = commands.add_parser('anonymize', help='Create a pseudonymized human replay archive and a separate private ID map')
     anonymize.add_argument('--input-dir', type=Path, required=True, help='Original archive containing main/ and module/')
     anonymize.add_argument('--output-dir', type=Path, required=True, help='Fresh export directory, separate from the input and ID map')
-    anonymize.add_argument('--id-map', type=Path, default=ROOT / 'data/private/id_map.csv')
+    anonymize.add_argument('--id-map', type=Path, required=True,
+                           help='Private CSV outside the repository and both archives')
     demo = commands.add_parser('demo', help='Invented responses; no access to collected human/model records')
     demo.add_argument('--output-dir', type=Path, default=ROOT / 'checks/runs/demo')
     process = commands.add_parser('process', help='Fresh v4 model scoring and/or human retention')
@@ -148,6 +149,12 @@ def main():
     args = parser.parse_args()
     if hasattr(args, 'l2_penalty') and (not math.isfinite(args.l2_penalty) or args.l2_penalty < 0):
         parser.error('--l2-penalty must be finite and nonnegative')
+    if args.command == 'anonymize':
+        from processing.anonymize_humans import validate_id_map_path
+        try:
+            args.id_map = validate_id_map_path(args.id_map)
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
     # Interpret user paths at the invocation directory, before subprocesses
     # switch to the repository root.
     for name, value in vars(args).items():

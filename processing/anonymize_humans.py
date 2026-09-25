@@ -13,6 +13,7 @@ import re
 import secrets
 import stat
 
+ROOT = Path(__file__).resolve().parents[1]
 COHORTS = ('main', 'module')
 MAP_FIELDS = ('cohort', 'new_id', 'old_username', 'old_analysis_id', 'prolific_pid')
 TEXT_FIELDS = ('puzzle_type', 'module', 'family_id', 'block_id', 'condition',
@@ -142,13 +143,22 @@ def exclusive_text(path):
     return os.fdopen(descriptor, 'w', encoding='utf-8', newline='')
 
 
+def validate_id_map_path(path):
+    path = Path(path)
+    if path.is_symlink():
+        raise ValueError('The ID map must not be a symlink')
+    resolved = path.resolve()
+    if resolved.is_relative_to(ROOT):
+        raise ValueError('The ID map must be outside the repository')
+    return resolved
+
+
 def run(input_dir, output_dir, id_map):
-    input_dir, requested_output, requested_map = map(Path, (input_dir, output_dir, id_map))
+    input_dir, requested_output = map(Path, (input_dir, output_dir))
+    map_path = validate_id_map_path(id_map)
     if requested_output.exists() or requested_output.is_symlink():
         raise FileExistsError('Choose a fresh replay output directory')
-    if requested_map.is_symlink():
-        raise ValueError('The ID map must not be a symlink')
-    input_dir, output_dir, map_path = [p.resolve() for p in (input_dir, requested_output, requested_map)]
+    input_dir, output_dir = [p.resolve() for p in (input_dir, requested_output)]
     if input_dir.is_relative_to(output_dir) or output_dir.is_relative_to(input_dir):
         raise ValueError('Input and output directories must be separate')
     if any(map_path.is_relative_to(p) or p.is_relative_to(map_path) for p in (input_dir, output_dir)):
@@ -186,7 +196,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input-dir', type=Path, required=True, help='Original archive containing main/ and module/')
     parser.add_argument('--output-dir', type=Path, required=True, help='Fresh de-identified replay directory')
-    parser.add_argument('--id-map', type=Path, required=True, help='Private CSV outside both archives; reuse requires an exact identity match')
+    parser.add_argument('--id-map', type=Path, required=True, help='Private CSV outside the repository and both archives; reuse requires an exact identity match')
     args = parser.parse_args()
     try:
         result = run(args.input_dir, args.output_dir, args.id_map)

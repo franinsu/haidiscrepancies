@@ -35,7 +35,7 @@ class CleanupTests(unittest.TestCase):
 
     def test_apply_removes_only_temporary_files(self):
         keep = [self.write(name) for name in (
-            "data/private/record.jsonl", "data/processed/rows.jsonl", "checks/.cache/comparison.json",
+            "data/human/record.jsonl", "data/processed/rows.jsonl", "checks/.cache/comparison.json",
             "data/ai/responses.jsonl", "data/stimuli/puzzles.jsonl", ".env",
             "intermediate/processed/human.jsonl", "intermediate/statistics/summary.json",
             "intermediate/__pycache__/cached.pyc", "intermediate/.cache/snapshot.json",
@@ -56,7 +56,7 @@ class CleanupTests(unittest.TestCase):
         intermediate = [self.write("intermediate/processed/human.jsonl"),
                         self.write("intermediate/statistics/summary.json"),
                         self.write("intermediate/.cache/cached.pyc")]
-        archive = self.write("data/private/record.jsonl")
+        archive = self.write("data/human/record.jsonl")
         reference = self.write("checks/reference/statistics.json")
         self.assertIn("  intermediate", self.run_cleanup("--results"))
         self.assertTrue(run.exists())

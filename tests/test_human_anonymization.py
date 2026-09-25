@@ -4,10 +4,12 @@ import csv
 import json
 from pathlib import Path
 import stat
+import subprocess
+import sys
 import tempfile
 import unittest
 
-from processing.anonymize_humans import MAP_FIELDS, run
+from processing.anonymize_humans import MAP_FIELDS, ROOT, run
 from processing import human
 
 
@@ -165,6 +167,40 @@ class HumanAnonymizationTests(unittest.TestCase):
                 self.write_inputs()
                 with self.assertRaises(ValueError):run(self.original, self.output, self.map_path)
                 self.assertFalse(self.output.exists()); self.assertFalse(self.map_path.exists())
+
+    def test_repository_id_maps_are_rejected_including_symlink_parents(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'tests') as folder:
+            inside = Path(folder)
+            alias = self.root/'repository_alias'
+            alias.symlink_to(inside, target_is_directory=True)
+            for directory in (inside, alias):
+                with self.subTest(directory=directory):
+                    map_path = directory/'not_created/id_map.csv'
+                    with self.assertRaisesRegex(ValueError, 'outside the repository'):
+                        run(self.original, self.output, map_path)
+                    self.assertFalse(self.output.exists())
+                    self.assertFalse(map_path.parent.exists())
+
+    def test_anonymization_commands_require_external_id_map_before_writing(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'tests') as folder:
+            inside = Path(folder)
+            alias = self.root/'repository_alias'
+            alias.symlink_to(inside, target_is_directory=True)
+            commands = ([sys.executable, '-B', str(ROOT/'reproduce.py'), 'anonymize'],
+                        [sys.executable, '-B', str(ROOT/'processing/anonymize_humans.py')])
+            for command in commands:
+                for path in (None, inside/'id_map.csv', alias/'new_directory/id_map.csv'):
+                    with self.subTest(command=command, path=path):
+                        arguments = ['--input-dir', str(self.original), '--output-dir', str(self.output)]
+                        if path is not None:
+                            arguments += ['--id-map', str(path)]
+                        result = subprocess.run([*command, *arguments], cwd=self.root,
+                                                capture_output=True, text=True)
+                        self.assertNotEqual(result.returncode, 0)
+                        self.assertIn('--id-map' if path is None else 'outside the repository', result.stderr)
+                        self.assertFalse(self.output.exists())
+                        self.assertFalse(self.map_path.exists())
+                        self.assertEqual(list(inside.iterdir()), [])
 
     def test_path_isolation_and_fresh_output_include_symlinks(self):
         self.output.mkdir()

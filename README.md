@@ -25,27 +25,27 @@ python -m unittest discover -s tests -v
 The demo scores invented answers to a public puzzle and writes a small plot and
 numerical summary to `/tmp/haidiscrepancies-demo`. Choose a destination that does
 not already exist. The demo and tests work with the files included in this
-repository; collected responses are needed only for the full study analysis.
+repository; restricted human responses are needed only for the full study analysis.
 
 ## Reproduce the study
 
-Full reproduction requires the recorded human and model response archives.
-These archives are **not included in this repository**, and a data-access link
-is not yet provided here. Human records require restricted access. Once the
-archives are available, arrange the inputs as follows, keeping the accompanying
-archive and run manifests:
+The recorded model responses are included as compressed JSONL files. Full
+reproduction also requires the **restricted human response archive**, which is
+not included; a human data-access link is not yet provided here. Once that
+archive is available, arrange the inputs as follows:
 
 ```text
 data/
 ├── stimuli/                         included public study materials
-├── private/
+├── human/
 │   ├── main/{participants,responses}.jsonl
 │   ├── module/{participants,responses}.jsonl
 │   └── anonymization_manifest.json
 └── ai/
-    ├── openai/{main,module}/responses.jsonl
-    ├── anthropic/{main,module}/responses.jsonl
-    └── gemini/formal/responses.jsonl
+    ├── manifest.json
+    ├── openai/{main,module}/responses.jsonl.gz
+    ├── anthropic/{main,module}/responses.jsonl.gz
+    └── gemini/formal/responses.jsonl.gz
 ```
 
 Run the complete workflow:
@@ -56,7 +56,7 @@ python reproduce.py full --workers 1
 
 Both `intermediate/` and `results/` must be absent before a full run. To retain an
 existing run, choose fresh paths with `--intermediate-dir` and `--output-dir`.
-Use `--data-dir` for another input root containing `stimuli/`, `private/` and
+Use `--data-dir` for another input root containing `stimuli/`, `human/` and
 `ai/`, and `--workers` for parallel regression fits. Full settings require
 substantial CPU time. Smaller resampling counts can test the pipeline, but do
 not reproduce the paper's uncertainty estimates.
@@ -66,8 +66,8 @@ not reproduce the paper's uncertainty estimates.
 | Location | Contents | Availability and handling |
 |---|---|---|
 | `data/stimuli/` | Frozen puzzles, complete solution catalogs, module design and selection provenance | Included in the repository |
-| `data/private/` | Pseudonymized human response archives | Restricted input; excluded from Git |
-| `data/ai/` | Recorded model requests and run/batch metadata | Separate input archive; excluded from Git |
+| `data/human/` | Pseudonymized human response archives | Restricted input; excluded from Git; contains no identity map |
+| `data/ai/` | Recorded model answers, experimental settings and token counts | Five compressed response files and their manifest are included; new collection runs remain excluded |
 | `intermediate/` | Processed trials, full statistics, regression checkpoints and run records | Generated locally; excluded from Git; contains private or restricted derivatives |
 | `results/` | Figures, LaTeX tables, displayed-data exports and rendering manifest | Generated locally; excluded from Git by default |
 
@@ -76,11 +76,19 @@ and tables. Individual response histories remain private after participant IDs
 are replaced. Keep raw human records and detailed derivatives in restricted
 storage; intermediate files can be regenerated from the response archives.
 
-Reproduction needs `data/private/{main,module}/`, not an identity map. These
+Reproduction needs `data/human/{main,module}/`, not an identity map. Store any
+identity map outside this repository in separately restricted storage. These
 archives preserve final answers, exclusions, timings and within-study pairing
 while removing identifying and administrative fields. The model archive has
 288,000 requests, expanding to 324,000 scored trials because sequence requests
 contain two puzzles. Retention yields 104 main and 417 module participants.
+
+The public model files preserve response text, puzzle/condition labels, sampling
+settings, token counts and experiment-derived request IDs used for pairing.
+Provider response IDs, opaque reasoning payloads and original run/batch manifests
+are omitted. `data/ai/manifest.json` records file hashes and request counts.
+The loader reads gzip files directly; uncompressed `responses.jsonl` is also
+supported for new collections. Keep only one representation in each input folder.
 
 The following diagram traces data from recorded responses to final outputs.
 Full statistical files remain local; selected plotted values and table cells
@@ -91,14 +99,14 @@ data/
 ├── stimuli/ [PUBLIC: puzzles, solutions and conditions]
 │   ├── study illustrations → results/figures/
 │   └── catalogs, design and features → statistics below
-├── private/ [PRIVATE]
+├── human/ [RESTRICTED]
 │   ├── {main,module}/participants.jsonl + responses.jsonl
 │   │   └── intermediate/processed/human/ [PRIVATE]
 │   │       ├── main_retained.jsonl
 │   │       └── module_retained.jsonl
 │   └── anonymization_manifest.json
-└── ai/ [separate model archive]
-    └── responses + run/batch manifests
+└── ai/ [PUBLIC: model response exports]
+    └── responses.jsonl.gz + manifest.json
         └── intermediate/processed/ai/*_{main,module}.jsonl
 
 Retained/scored observations + public study design
@@ -245,14 +253,31 @@ pseudonymized archive. The input must contain `main/` and `module/`:
 
 ```sh
 python reproduce.py anonymize --input-dir /path/to/original_archive \
-  --output-dir /path/to/fresh_archive --id-map data/private/id_map.csv
+  --output-dir data/human --id-map /restricted/location/id_map.csv
 ```
 
 The exporter requires a fresh destination, preserves all participants before
 retention, removes absolute dates and administrative fields, and preserves
 bootstrap ordering. Valid existing maps are reused. A restricted deposit should
 contain `main/`, `module/` and `anonymization_manifest.json`; keep `id_map.csv`
-separately restricted. This is reversible pseudonymization.
+separately restricted outside the repository. `--id-map` is required, and paths
+inside the repository are rejected. The map is never needed for analysis.
+This is reversible pseudonymization.
+
+## Export model responses
+
+To prepare model data in the same format from an original AI archive:
+
+```sh
+python processing/export_models.py --input-dir /path/to/original_ai \
+  --output-dir /path/to/fresh_model_export
+```
+
+The exporter preserves reviewed study fields and omits provider payloads,
+provider response IDs and run/batch manifests. It rejects unreviewed fields,
+populated API errors and absolute asset paths. Review any newly collected
+response text before publishing it; field filtering cannot anonymize arbitrary
+text. The original archive is left unchanged.
 
 ## Collecting new responses
 
@@ -279,7 +304,7 @@ without revealing solution counts or candidate answers.
 For the human interface:
 
 ```sh
-python collection/human/server.py --host 127.0.0.1 --port 8015 --db data/private/new_runs/local_study.sqlite3
+python collection/human/server.py --host 127.0.0.1 --port 8015 --db data/human/new_runs/local_study.sqlite3
 ```
 
 Open `http://127.0.0.1:8015/study_web/app/?formal=1&study=main` or change the study

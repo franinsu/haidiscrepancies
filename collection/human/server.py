@@ -33,7 +33,7 @@ from puzzles import grid_placement, minesweeper_lite, mini_sudoku
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_DB = ROOT / "data" / "private" / "new_runs" / "study_state.sqlite3"
+DEFAULT_DB = ROOT / "data" / "human" / "new_runs" / "study_state.sqlite3"
 QUALITY_CHECKS_PATH = Path(
     os.environ.get(
         "STUDY_QUALITY_CHECKS_PRIVATE_PATH",
