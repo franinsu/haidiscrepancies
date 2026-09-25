@@ -220,37 +220,6 @@ The root command pins numerical-library threads and `PYTHONHASHSEED`; seeds,
 draw counts and runtime are recorded in outputs. Paper table renderers require
 full draw counts.
 
-<details>
-<summary>Regression objective and exact optimization algorithm</summary>
-
-The default L2 strength is **0.0001**. The objective is weighted **mean**
-negative log likelihood (natural logs) plus
-`lambda / 2 * sum(feature_coefficients**2)`, on the normalized feature scale.
-The binary intercept is unpenalized. Puzzle weights are equal or follow their
-bootstrap multiplicity; source classification balances human and model mass.
-The same penalty is used for full, held-out and bootstrap fits. Prediction
-metrics measure unpenalized held-out performance. Use `--l2-penalty 0` on
-`analyze` or `full` for the earlier unpenalized estimator.
-
-The solver in `analysis/regression_optimizer.py` and
-`analysis/regression_bootstrap.py` is damped Newton with Armijo backtracking:
-
-1. Start at zero; calculate the exact analytic gradient and Hessian.
-2. Solve `H * direction = -gradient`. A singular Hessian uses the symmetric
-   Moore–Penrose pseudoinverse; an invalid or non-descent direction uses the
-   negative gradient.
-3. Start at step size one and halve until
-   `new_loss <= old_loss + 1e-4 * step * gradient.dot(direction) + 1e-15`,
-   trying at most 60 step sizes.
-4. Stop at gradient maximum norm `1e-8`, with a 10,000-iteration limit.
-   Record failures and retain their finite estimates; do not replace draws.
-
-Bootstrap fits are batched in groups of 128 with independent steps and stopping
-decisions. There is no automatic penalty tuning. Reported inference uses the
-bootstrap; positive-penalty outputs omit unused unpenalized Wald diagnostics.
-
-</details>
-
 ## Reproducibility
 
 The frozen stimuli and catalogs define the study inputs. Regenerating candidate
