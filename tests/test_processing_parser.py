@@ -8,8 +8,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import collection.models.build_api_run_manifest as manifest_builder
+from collection.models.run_api_collection import _score_attempt
 import processing.response_parser as response_parser
-from processing.score_responses import score_responses
+from processing.score_responses import _expand_response_row, _score_one_response, score_responses
 from puzzles.common import stable_hash
 
 
@@ -118,10 +119,57 @@ class ResponseParserRegressionTests(unittest.TestCase):
             self.assertTrue(scored[0]["is_valid"])
             self.assertEqual(scored[0]["abstract_solution_id"], "abstract_synthetic")
 
-    def test_sequence_line_order_and_single_answer_fallback_remain_supported(self):
-        self.assertEqual(response_parser.split_sequence_response("(1,1)\n(2,2)")["answers"], ["(1,1)", "(2,2)"])
-        parsed = response_parser.score_raw_answer(_single_coordinate_puzzle("mini_sudoku"), "", raw_response="(1,1)")
-        self.assertTrue(parsed["is_valid"])
+    def test_sequence_missing_answers_stay_empty_in_collection_and_processing(self):
+        puzzle = _single_coordinate_puzzle("mini_sudoku")
+        puzzles = {"A": puzzle, "B": puzzle}
+        cases = [
+            ("A: (1,1)", ["(1,1)", ""]),
+            ("B: (1,1)", ["", "(1,1)"]),
+            ("A: (1,1)\nB:", ["(1,1)", ""]),
+            ("A:\nB: (1,1)", ["", "(1,1)"]),
+            ("B: (1,1)\nOne answer only.", ["", "(1,1)\nOne answer only."]),
+            ("(1,1)", ["", ""]),
+            ("", ["", ""]),
+        ]
+        for text, expected_answers in cases:
+            with self.subTest(text=text):
+                raw = {"input_kind": "sequence", "trial_ids": "A;B", "puzzle_id": "PAIR", "raw_response": text}
+                split = response_parser.split_sequence_response(text)
+                self.assertEqual(split["answers"], expected_answers)
+                self.assertEqual(split["parse_confidence"], "low")
+                scored = [_score_one_response(part, response_index=i, puzzles=puzzles, catalog={})
+                          for i, part in enumerate(_expand_response_row(raw), start=1)]
+                self.assertEqual([row["raw_answer"] for row in scored], expected_answers)
+                self.assertTrue(all(row["raw_response"] == text for row in scored))
+                self.assertEqual([row["is_valid"] for row in scored], [bool(answer) for answer in expected_answers])
+                for row, answer in zip(scored, expected_answers):
+                    if not answer:
+                        self.assertEqual(row["invalid_reason"], "empty")
+                        self.assertIsNone(row["solution_id"])
+                online = _score_attempt(raw, text, puzzles)
+                for online_row, offline_row in zip(online, scored):
+                    self.assertEqual(online_row, {key: offline_row[key] for key in online_row})
+
+    def test_complete_sequences_preserve_labels_and_line_order(self):
+        for text, expected, confidence in [
+            ("A: (1,1)\nB: (2,2)", ["(1,1)", "(2,2)"], "high"),
+            ("B: (2,2)\nA: (1,1)", ["(1,1)", "(2,2)"], "high"),
+            ("(1,1)\n(2,2)", ["(1,1)", "(2,2)"], "medium"),
+        ]:
+            with self.subTest(text=text):
+                split = response_parser.split_sequence_response(text)
+                self.assertEqual(split["answers"], expected)
+                self.assertEqual(split["parse_confidence"], confidence)
+
+    def test_single_answer_raw_response_fallback_remains_supported(self):
+        puzzle = _single_coordinate_puzzle("mini_sudoku")
+        raw = {"input_kind": "single", "trial_ids": "A", "puzzle_id": "A", "raw_answer": "", "raw_response": "(1,1)"}
+        direct = response_parser.score_raw_answer(puzzle, "", raw_response="(1,1)")
+        offline = _score_one_response(raw, response_index=1, puzzles={"A": puzzle}, catalog={})
+        online = _score_attempt(raw, "(1,1)", {"A": puzzle})[0]
+        self.assertTrue(direct["is_valid"])
+        self.assertEqual(direct, online)
+        self.assertEqual(direct, {key: offline[key] for key in direct})
 
     def test_single_coordinate_puzzles_reject_multiple_coordinates(self):
         for puzzle_type in ("minesweeper_lite", "mini_sudoku"):
@@ -133,7 +181,7 @@ class ResponseParserRegressionTests(unittest.TestCase):
                 self.assertFalse(result["is_valid"])
                 self.assertEqual(result["invalid_reason"], "wrong_number_of_tokens")
                 self.assertEqual(result["parsed_answer"], [[1, 1], [2, 2]])
-                self.assertEqual(result["parser_version"], "response_parser_v4")
+                self.assertEqual(result["parser_version"], "response_parser_v5")
 
     def test_grid_placement_still_accepts_multiple_coordinates(self):
         result = response_parser.score_raw_answer(
@@ -142,7 +190,7 @@ class ResponseParserRegressionTests(unittest.TestCase):
         )
         self.assertTrue(result["is_valid"])
         self.assertEqual(result["solution_id"], "synthetic_grid_solution")
-        self.assertEqual(result["parser_version"], "response_parser_v4")
+        self.assertEqual(result["parser_version"], "response_parser_v5")
 
     def test_single_sentence_terminal_period_is_ignored_for_semantic_scoring(self):
         result = response_parser.score_raw_answer(
@@ -153,7 +201,7 @@ class ResponseParserRegressionTests(unittest.TestCase):
         self.assertEqual(result["solution_id"], "synthetic_arithmetic_solution")
         self.assertEqual(result["extracted_answer"], "8*3+4-4")
         self.assertIn("Ignored one sentence-terminal period.", result["parse_notes"])
-        self.assertEqual(result["parser_version"], "response_parser_v4")
+        self.assertEqual(result["parser_version"], "response_parser_v5")
 
     def test_ellipsis_is_not_treated_as_one_sentence_terminal_period(self):
         result = response_parser.score_raw_answer(
@@ -265,13 +313,13 @@ class ResponseParserRegressionTests(unittest.TestCase):
                 )
 
             parser_hash = _sha256(response_parser.__file__)
-            self.assertEqual(manifest["parser_version"], "response_parser_v4")
+            self.assertEqual(manifest["parser_version"], "response_parser_v5")
             self.assertEqual(manifest["hashes"]["response_parser_sha256"], parser_hash)
 
             written_manifest = json.loads(
                 (root / "runs" / "SYNTH_RUN" / "run_manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(written_manifest["parser_version"], "response_parser_v4")
+            self.assertEqual(written_manifest["parser_version"], "response_parser_v5")
             self.assertEqual(written_manifest["hashes"]["response_parser_sha256"], parser_hash)
 
 

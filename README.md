@@ -185,7 +185,9 @@ recorded in the rendering manifest.
 ## Analysis conventions
 
 - The primary model condition is low effort with the plain prompt. Model
-  answers use parser **v4**, including its historical sequence fallback.
+  answers use parser **v5**. Missing answers in a sequence remain empty and
+  invalid; the other puzzle's answer is never reused to fill a missing slot.
+  Unlabeled sequences require enough separate answer lines.
 - Correctness uses all relevant trials. Solution distributions condition on
   correct/valid answers and retain every catalogued class, including zeros.
 - Human retention requires complete response coverage and excludes testers.
@@ -295,7 +297,7 @@ batch submission call paid providers. Credentials come from `OPENAI_API_KEY`,
 `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
 
 Frozen prompts, 240 images, settings and their manifests live in
-`collection/models/`. Runs verify their hashes and the v4 parser hash.
+`collection/models/`. Runs verify their hashes and the v5 parser hash.
 The two prompt conditions are `direct_solve` and `human_participant`; A/B
 sequences use one combined image. Collection is one-shot, with no solver
 feedback or invalid-answer retries. Images give rules and answer formats,

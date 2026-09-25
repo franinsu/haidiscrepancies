@@ -18,13 +18,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CollectionTests(unittest.TestCase):
-    def test_single_v4_parser_is_shared_with_collection(self):
+    def test_single_v5_parser_is_shared_with_collection(self):
         runner = importlib.import_module('collection.models.run_api_collection')
         self.assertIs(runner.score_raw_answer, response_parser.score_raw_answer)
         self.assertIs(server.score_raw_answer, response_parser.score_raw_answer)
-        self.assertEqual(response_parser.PARSER_VERSION, 'response_parser_v4')
+        self.assertEqual(response_parser.PARSER_VERSION, 'response_parser_v5')
         self.assertEqual(hashlib.sha256(Path(response_parser.__file__).read_bytes()).hexdigest(),
-                         '3d511f30fb05e93001f2487d1fa7081864648d398ca87ec723f4df2c83d5eb84')
+                         '92d73cd85c915bae89c2957fc39a8fc6365ac97482fe9b201b5ed0cccb0983c7')
 
     def test_study_modules_import_only_clean_project_sources(self):
         names = ['collection.models.' + name for name in

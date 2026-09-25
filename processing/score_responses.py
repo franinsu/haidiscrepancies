@@ -85,7 +85,9 @@ def _score_one_response(
             "parse_notes": "Puzzle ID was not found in the dataset.",
         }
     else:
-        parsed = score_raw_answer(puzzles[puzzle_id], raw_answer, raw_response=raw_response)
+        # An absent sequence slot must not inherit the other puzzle's answer.
+        parse_response = "" if response.get("input_kind") == "sequence" and not raw_answer else raw_response
+        parsed = score_raw_answer(puzzles[puzzle_id], raw_answer, raw_response=parse_response)
     solution_meta = catalog.get(parsed.get("solution_id"), {})
     puzzle_meta = puzzles.get(puzzle_id, {})
     return {

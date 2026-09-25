@@ -813,7 +813,7 @@ def _score_attempt(queue_row: Dict[str, str], raw_response: str, puzzles: Dict[s
         out = []
         for idx, trial_id in enumerate(trial_ids):
             answer = split["answers"][idx] if idx < len(split["answers"]) else ""
-            parsed = score_raw_answer(puzzles[trial_id], answer, raw_response=raw_response)
+            parsed = score_raw_answer(puzzles[trial_id], answer, raw_response=raw_response if answer else "")
             out.append(parsed)
         return out
     trial_id = trial_ids[0]

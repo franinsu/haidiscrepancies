@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Sequence, Tuple
 from puzzles import arithmetic24, grid_placement, maze, minesweeper_lite, mini_sudoku
 
 
-PARSER_VERSION = "response_parser_v4"
+PARSER_VERSION = "response_parser_v5"
 
 
 def score_raw_answer(puzzle: Dict[str, Any], raw_answer: str, raw_response: str | None = None) -> Dict[str, Any]:
@@ -359,6 +359,13 @@ def split_sequence_response(raw_response: str, expected: int = 2) -> Dict[str, A
     if all(answers):
         return {"answers": answers, "parse_confidence": "high", "parse_notes": ""}
 
+    if matches:
+        return {
+            "answers": answers,
+            "parse_confidence": "low",
+            "parse_notes": "A labeled sequence answer is missing; left the missing slot empty.",
+        }
+
     lines = [line.strip() for line in text.splitlines() if line.strip()]
     if len(lines) >= expected:
         for idx in range(expected):
@@ -370,11 +377,8 @@ def split_sequence_response(raw_response: str, expected: int = 2) -> Dict[str, A
             "parse_notes": "Sequence answer inferred from line order.",
         }
 
-    for idx in range(expected):
-        if not answers[idx]:
-            answers[idx] = text
     return {
         "answers": answers,
         "parse_confidence": "low",
-        "parse_notes": "Could not split sequence confidently; reused full response.",
+        "parse_notes": "Too few sequence answers; left unanswered slots empty.",
     }

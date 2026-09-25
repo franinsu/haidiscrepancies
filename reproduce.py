@@ -122,7 +122,7 @@ def main():
                            help='Private CSV outside the repository and both archives')
     demo = commands.add_parser('demo', help='Invented responses; no access to collected human/model records')
     demo.add_argument('--output-dir', type=Path, default=ROOT / 'checks/runs/demo')
-    process = commands.add_parser('process', help='Fresh v4 model scoring and/or human retention')
+    process = commands.add_parser('process', help='Fresh v5 model scoring and/or human retention')
     process.add_argument('--data-dir', type=Path, default=ROOT / 'data')
     process.add_argument('--output-dir', type=Path, required=True)
     process.add_argument('--stage', choices=['human', 'models', 'all'], default='all')

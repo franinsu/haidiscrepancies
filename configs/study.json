@@ -2,7 +2,7 @@
   "schema_version": 1,
   "reference_paper_commit": "cd1119c4b9f5460b3802d65d4736eebd05749c4f",
   "reference_paper_revision": "0923, 23 September 2026",
-  "parser": "response_parser_v4",
+  "parser": "response_parser_v5",
   "primary_condition": {
     "model_effort": "low",
     "prompt": "direct_solve"
