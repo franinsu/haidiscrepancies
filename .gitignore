@@ -1,6 +1,7 @@
 # Public study materials and the explicitly listed model exports belong in Git.
 # Human archives, ID maps and all other data folders stay local.
 /data/*
+!/data/study_manifest.json
 !/data/stimuli/
 # PRIVATE GENERATED DATA: may contain participant-level human records. Keep local or delete;
 # these do not need a second private-cloud archive because they are reproducible.

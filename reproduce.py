@@ -65,7 +65,7 @@ def pipeline(args) -> None:
     sources = [p for group in ['analysis', 'processing', 'puzzles', 'figures']
                for p in (ROOT / group).rglob('*.py')]
     sources += list((ROOT / 'figures').rglob('*.json'))
-    sources += [ROOT / 'reproduce.py', ROOT / 'requirements.lock', ROOT / 'configs/study.json']
+    sources += [ROOT / 'reproduce.py', ROOT / 'requirements.lock', ROOT / 'data/study_manifest.json']
     report = {'status': 'running', 'mode': 'fresh_raw_to_figures',
               'python': sys.version, 'platform': platform.platform(),
               'data_dir': str(args.data_dir.resolve()),

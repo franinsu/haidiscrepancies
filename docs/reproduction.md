@@ -26,6 +26,7 @@ Once authorized inputs are available, arrange them as follows:
 
 ```text
 data/
+├── study_manifest.json              study-level metadata
 ├── stimuli/                         public puzzles, solutions, and study design
 ├── human/                           restricted; excluded from Git
 │   ├── main/{participants,responses}.jsonl

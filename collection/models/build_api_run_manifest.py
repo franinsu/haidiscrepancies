@@ -33,7 +33,7 @@ RESPONSE_PARSER_PATH = Path(__file__).resolve().parents[2] / "processing" / "res
 
 def describe_api_run(
     image_manifest_path: str = "collection/models/manifests/image_manifest.csv",
-    model_conditions_path: str = "collection/models/templates/api_model_conditions.json",
+    model_conditions_path: str = "collection/models/config/api_model_conditions.json",
     prompt_manifest_path: str = "collection/models/prompts/prompt_manifest.json",
     main_data_path: str = "data/stimuli/all_puzzles.jsonl",
     modules_data_path: str = "data/stimuli/modules/all_module_trials.jsonl",
@@ -88,7 +88,7 @@ def build_api_run_manifest(
     run_id: str,
     out_root: str = "data/ai/new_runs",
     image_manifest_path: str = "collection/models/manifests/image_manifest.csv",
-    model_conditions_path: str = "collection/models/templates/api_model_conditions.json",
+    model_conditions_path: str = "collection/models/config/api_model_conditions.json",
     prompt_manifest_path: str = "collection/models/prompts/prompt_manifest.json",
     main_data_path: str = "data/stimuli/all_puzzles.jsonl",
     modules_data_path: str = "data/stimuli/modules/all_module_trials.jsonl",
@@ -680,7 +680,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--run_id", default="", help="Unique run ID. Defaults to timestamped api_YYYYMMDDTHHMMSSZ.")
     parser.add_argument("--out_root", default="data/ai/new_runs")
     parser.add_argument("--image_manifest", default="collection/models/manifests/image_manifest.csv")
-    parser.add_argument("--model_conditions_config", default="collection/models/templates/api_model_conditions.json")
+    parser.add_argument("--model_conditions_config", default="collection/models/config/api_model_conditions.json")
     parser.add_argument("--prompt_manifest", default="collection/models/prompts/prompt_manifest.json")
     parser.add_argument("--main_data", default="data/stimuli/all_puzzles.jsonl")
     parser.add_argument("--modules_data", default="data/stimuli/modules/all_module_trials.jsonl")

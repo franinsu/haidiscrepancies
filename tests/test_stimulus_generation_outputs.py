@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from PIL import Image, ImageFont, features
 
-from collection.models.build_solution_catalog import build_solution_catalog
+from collection.stimuli.build_solution_catalog import build_solution_catalog
 from collection.models.render_api_images import render_api_images, render_single_trial
 
 
@@ -57,17 +57,17 @@ class StimulusOutputTests(unittest.TestCase):
 
     def test_cli_requires_explicit_output_destinations(self):
         commands = [
-            (["build_solution_catalog.py"], "--out"),
-            (["render_api_images.py"], "--out_dir"),
-            (["render_api_images.py", "--out_dir", str(self.root / "images")], "--manifest"),
-            (["render_api_images.py", "--manifest", str(self.root / "manifest.csv")], "--out_dir"),
-            (["run.py", "render"], "--out_dir"),
+            (["collection/stimuli/build_solution_catalog.py"], "--out"),
+            (["collection/models/render_api_images.py"], "--out_dir"),
+            (["collection/models/render_api_images.py", "--out_dir", str(self.root / "images")], "--manifest"),
+            (["collection/models/render_api_images.py", "--manifest", str(self.root / "manifest.csv")], "--out_dir"),
+            (["collection/models/run.py", "render"], "--out_dir"),
         ]
         before = set(self.root.iterdir())
         for arguments, missing in commands:
             with self.subTest(arguments=arguments):
                 result = subprocess.run(
-                    [sys.executable, "-B", str(ROOT / "collection/models" / arguments[0]), *arguments[1:]],
+                    [sys.executable, "-B", str(ROOT / arguments[0]), *arguments[1:]],
                     cwd=self.root, capture_output=True, text=True,
                 )
                 self.assertEqual(result.returncode, 2, result.stderr)

@@ -74,7 +74,7 @@ ANTHROPIC_CUSTOM_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 
 def prepare_api_batches(
     run_dir: str,
-    model_conditions_path: str = "collection/models/templates/api_model_conditions.json",
+    model_conditions_path: str = "collection/models/config/api_model_conditions.json",
     providers: Sequence[str] = DEFAULT_BATCH_PROVIDERS,
     api_model_conditions: Sequence[str] | None = None,
     limit: int = 0,
@@ -248,7 +248,7 @@ def prepare_api_batches(
 
 def submit_api_batches(
     run_dir: str,
-    model_conditions_path: str = "collection/models/templates/api_model_conditions.json",
+    model_conditions_path: str = "collection/models/config/api_model_conditions.json",
     providers: Sequence[str] = DEFAULT_BATCH_PROVIDERS,
     api_model_conditions: Sequence[str] | None = None,
     limit: int = 0,
@@ -326,7 +326,7 @@ def submit_api_batches(
 
 def collect_api_batches(
     run_dir: str,
-    model_conditions_path: str = "collection/models/templates/api_model_conditions.json",
+    model_conditions_path: str = "collection/models/config/api_model_conditions.json",
     main_data_path: str = "data/stimuli/all_puzzles.jsonl",
     modules_data_path: str = "data/stimuli/modules/all_module_trials.jsonl",
     only_completed: bool = True,
@@ -1162,7 +1162,7 @@ def _anthropic_batches_endpoint() -> str:
 
 
 def _google_batch_endpoint(api_model_condition: str) -> str:
-    model_conditions = _read_json("collection/models/templates/api_model_conditions.json")
+    model_conditions = _read_json("collection/models/config/api_model_conditions.json")
     model = model_conditions[api_model_condition]["model"]
     template = os.environ.get(
         "GEMINI_BATCH_GENERATE_CONTENT_ENDPOINT_TEMPLATE",
@@ -1386,7 +1386,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Prepare, submit, and collect provider batch API jobs for an API run.")
     parser.add_argument("action", choices=["prepare", "submit", "collect"])
     parser.add_argument("--run_dir", required=True)
-    parser.add_argument("--model_conditions_config", default="collection/models/templates/api_model_conditions.json")
+    parser.add_argument("--model_conditions_config", default="collection/models/config/api_model_conditions.json")
     parser.add_argument("--main_data", default="data/stimuli/all_puzzles.jsonl")
     parser.add_argument("--modules_data", default="data/stimuli/modules/all_module_trials.jsonl")
     parser.add_argument("--providers", default=",".join(DEFAULT_BATCH_PROVIDERS))

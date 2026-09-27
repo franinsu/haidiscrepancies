@@ -112,7 +112,7 @@ class CollectionTests(unittest.TestCase):
     def test_three_study_providers_prepare_batches_and_mock_without_network(self):
         from collection.models import build_api_run_manifest, run_api_batch, run_api_collection, run_integrity
         with chdir(ROOT), tempfile.TemporaryDirectory(dir=ROOT / 'tests') as directory:
-            config = json.loads((ROOT / 'collection/models/templates/api_model_conditions.json').read_text())
+            config = json.loads((ROOT / 'collection/models/config/api_model_conditions.json').read_text())
             self.assertEqual(len(config), 6)
             self.assertEqual({item['provider'] for item in config.values()}, {'openai', 'anthropic', 'google'})
             with self.assertRaises(run_integrity.RunIntegrityError):

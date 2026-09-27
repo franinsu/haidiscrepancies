@@ -40,7 +40,7 @@ def run_api_collection(
     final_summary_path: str = "",
     error_log_path: str = "",
     run_summary_path: str = "",
-    model_conditions_path: str = "collection/models/templates/api_model_conditions.json",
+    model_conditions_path: str = "collection/models/config/api_model_conditions.json",
     main_data_path: str = "data/stimuli/all_puzzles.jsonl",
     modules_data_path: str = "data/stimuli/modules/all_module_trials.jsonl",
     mode: str = "mock",
@@ -1126,7 +1126,7 @@ def main() -> int:
     parser.add_argument("--final_summary", default="")
     parser.add_argument("--errors", default="")
     parser.add_argument("--run_summary", default="")
-    parser.add_argument("--model_conditions_config", default="collection/models/templates/api_model_conditions.json")
+    parser.add_argument("--model_conditions_config", default="collection/models/config/api_model_conditions.json")
     parser.add_argument("--main_data", default="data/stimuli/all_puzzles.jsonl")
     parser.add_argument("--modules_data", default="data/stimuli/modules/all_module_trials.jsonl")
     parser.add_argument("--mode", choices=["mock", "live"], default="mock")
