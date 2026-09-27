@@ -8,9 +8,6 @@
 # RELEASE CANDIDATES: generated figures, tables and exported summaries.
 # Keep untracked until reviewed for public release.
 /results/
-# DEVELOPMENT ONLY: comparisons, old numerical snapshots and audit records.
-# Disposable once reproduction is accepted; separate from permanent tests/.
-/checks/
 # Protect recognizable raw exports even when saved outside their usual folders.
 participants.jsonl*
 responses.jsonl*
