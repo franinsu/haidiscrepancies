@@ -1,4 +1,4 @@
-<h1 align="center">Investigating Human–AI Discrepancies via Multiple-Solution Problems</h1>
+<h1 align="center">Investigating Human–AI Discrepancies via<br>Multiple-Solution Problems</h1>
 
 <p align="center"><strong>Zihao Wang, Francesco Insulla, and Andrea Montanari</strong></p>
 
