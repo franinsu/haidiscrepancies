@@ -8,6 +8,8 @@ In this work, we ask whether human and model reasoning lead to different distrib
 
 Together, these results point at significant differences between human and AI problem-solving processes, and their choice among equally defensible solutions. As progressive deployment of AI systems in society comes into focus, evaluating such differences (beyond one-dimensional accuracy metrics) is increasingly important.
 
+GPT, Claude, and Gemini refer to OpenAI GPT 5.6 Sol, Anthropic Claude Opus 4.8, and Google Gemini 3.5 Flash, respectively.
+
 ![Figure 1. General experimental procedure.](docs/figures/fig_procedure.png)
 
 **Figure 1. General experimental procedure.** Puzzles with multiple valid solutions are presented to humans and models, and their answer distributions are compared.
