@@ -1,6 +1,8 @@
-# Investigating Human–AI Discrepancies via Multiple-Solution Problems
+<h1 align="center">Investigating Human–AI Discrepancies via Multiple-Solution Problems</h1>
 
-**Zihao Wang, Francesco Insulla, and Andrea Montanari**
+<p align="center"><strong>Zihao Wang, Francesco Insulla, and Andrea Montanari</strong></p>
+
+<p align="center">Stanford University</p>
 
 Frontier artificial intelligence (AI) models are benchmarked on whether they reach a correct answer. Yet many problems admit several correct answers and repeated attempts—by different people or by the same model resampled—trace out a distribution over them.
 
@@ -13,6 +15,10 @@ GPT, Claude, and Gemini refer to OpenAI GPT 5.6 Sol, Anthropic Claude Opus 4.8, 
 ![Figure 1. General experimental procedure.](docs/figures/fig_procedure.png)
 
 **Figure 1. General experimental procedure.** Puzzles with multiple valid solutions are presented to humans and models, and their answer distributions are compared.
+
+![Figure 2. Total-variation distances and source and family geometry.](docs/figures/tv_source_geometry.png)
+
+**Figure 2. Total-variation distances and source and family geometry.** **a**, Equal-family mean TV distances among Uniform, Human and the three AI models, averaged over puzzle family (95% confidence intervals from 5,000 whole-puzzle bootstrap resamples within family). **b**, TV distances by puzzle family, averaged across 20 puzzles per family. **c**, Two-dimensional solver embeddings from multidimensional scaling of mean TV across all puzzle families. **d**, Centered kernel alignment (CKA) of full positive-semidefinite five-source kernels built from each family's mean TV matrix across 20 puzzles. Percentages on the axes give the fraction of explained distance. Estimates use 100 main module puzzles (20 per family), conditional on correct human or valid model answers; model conditions are low effort and plain prompts.
 
 ![Figure 3. Entropy across puzzle families.](docs/figures/entropy_profile.png)
 
