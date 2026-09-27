@@ -9,8 +9,8 @@ def render(result):
     contexts = ['Related', 'Unrelated']
 
     fig = plt.figure(figsize=(WIDTH, 72 / 25.4))
-    left = fig.add_axes([.15, .27, .30, .55])
-    right = fig.add_axes([.64, .27, .34, .55])
+    left = fig.add_axes([.1492, .2718, .3012, .5494])
+    right = fig.add_axes([.6395, .2718, .3409, .5494])
     fig.text(.035, .93, 'a', fontsize=8, fontweight='bold')
     fig.text(.15, .93, 'Related − unrelated', fontsize=7)
     fig.text(.53, .93, 'b', fontsize=8, fontweight='bold')
@@ -27,14 +27,15 @@ def render(result):
         for source in names[1:]:
             item, = [c for c in contrasts if c['comparison'] == 'Human minus model'
                      and c['source'] == source and c['context'] == context]
-            position = contexts.index(context)
+            # Align the two contexts with the middle two rows of panel a.
+            position = contexts.index(context) + 1
             point_ci(right, item['estimate_bits'], position,
                      [item['ci95_low'], item['ci95_high']], colour[source], True)
             plotted.append({'panel': 'b', 'y': position, **item})
-    left.set(yticks=range(4), yticklabels=names, ylim=(3.55, -.55),
+    left.set(yticks=range(4), yticklabels=names, ylim=(3.6, -.6),
              xlim=(-.10, .27), xticks=[-.1, 0, .1, .2])
-    right.set(yticks=range(2), yticklabels=contexts, ylim=(1.55, -.55),
-              xlim=(-.03, .65), xticks=[0, .2, .4, .6])
+    right.set(yticks=[1, 2], yticklabels=contexts, ylim=(3.6, -.6),
+              xlim=(-.02, .62), xticks=[0, .2, .4, .6])
     for ax in [left, right]:
         ax.set_xlabel('MI difference (bits)')
         clean(ax, 'x')

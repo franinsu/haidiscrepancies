@@ -86,7 +86,7 @@
       ]
     },
     {
-      "text": "ChatGPT",
+      "text": "GPT",
       "origin": [
         102.82662200927734,
         181.54202270507812
@@ -206,7 +206,7 @@
       ]
     },
     {
-      "text": "ChatGPT",
+      "text": "GPT",
       "origin": [
         9.845250129699707,
         101.16220092773438
@@ -1386,7 +1386,7 @@
       ]
     },
     {
-      "text": "Uniform \u2013 ChatGPT",
+      "text": "Uniform \u2013 GPT",
       "origin": [
         272.380126953125,
         49.744873046875
@@ -1446,7 +1446,7 @@
       ]
     },
     {
-      "text": "Human \u2013 ChatGPT",
+      "text": "Human \u2013 GPT",
       "origin": [
         274.395751953125,
         94.89181518554688
@@ -1506,7 +1506,7 @@
       ]
     },
     {
-      "text": "ChatGPT \u2013 Claude",
+      "text": "GPT \u2013 Claude",
       "origin": [
         274.927001953125,
         140.0387420654297
@@ -1526,7 +1526,7 @@
       ]
     },
     {
-      "text": "ChatGPT \u2013 Gemini",
+      "text": "GPT \u2013 Gemini",
       "origin": [
         274.927001953125,
         152.5795440673828
@@ -1866,7 +1866,7 @@
       ]
     },
     {
-      "text": "ChatGPT",
+      "text": "GPT",
       "origin": [
         161.71463012695312,
         257.5213928222656
@@ -2419,19 +2419,19 @@
     },
     "markers": [
       {
-        "fill_color_hex": "#CC79A7"
+        "fill_color_hex": "#E377C2"
       },
       {
-        "fill_color_hex": "#E6AB02"
+        "fill_color_hex": "#F0C808"
       },
       {
-        "fill_color_hex": "#6A3D9A"
+        "fill_color_hex": "#1B5E20"
       },
       {
-        "fill_color_hex": "#8C564B"
+        "fill_color_hex": "#56B4E9"
       },
       {
-        "fill_color_hex": "#17ACC1"
+        "fill_color_hex": "#F58518"
       }
     ]
   }

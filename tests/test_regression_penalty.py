@@ -189,7 +189,7 @@ class RegressionPenaltyTests(unittest.TestCase):
             regressions.prepare_output(Path(folder), baseline)
             with self.assertRaisesRegex(ValueError, 'manifest differs'):
                 regressions.prepare_output(Path(folder), ridge)
-        task = regressions.tasks_for('sudoku', {'ChatGPT': 'model'}, 2)[0]
+        task = regressions.tasks_for('sudoku', {'GPT': 'model'}, 2)[0]
         self.assertEqual(task['l2_penalty'], DEFAULT_L2_PENALTY)
         fit = {'bootstrap_validation_repeats': 2, 'bootstrap_rejected_fits': 0,
                'bootstrap_shared_draws_for_coefficients_and_validation': True,
@@ -208,7 +208,7 @@ class RegressionPenaltyTests(unittest.TestCase):
 
         # A historical task with no penalty field still means unpenalized, even
         # though newly generated tasks now default to the positive strength.
-        legacy_task = regressions.tasks_for('sudoku', {'ChatGPT': 'model'}, 2, 0.)[0]
+        legacy_task = regressions.tasks_for('sudoku', {'GPT': 'model'}, 2, 0.)[0]
         self.assertNotIn('l2_penalty', legacy_task)
         legacy_fit = {**fit, 'optimizer': method_metadata(0.)}
         regressions.validate_fit(legacy_fit, legacy_task, ['feature'])

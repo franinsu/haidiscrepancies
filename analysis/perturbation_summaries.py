@@ -4,7 +4,7 @@ import numpy as np
 from . import stimulus_modules as sm
 from .normalized_attraction import equal_family_summary, normalized_attraction
 
-LABELS = {'Human':'Human','GPT 5.6 Sol|low|plain':'ChatGPT',
+LABELS = {'Human':'Human','GPT 5.6 Sol|low|plain':'GPT',
           'Claude Opus 4.8|low|plain':'Claude','Gemini 3.5 Flash|low|plain':'Gemini'}
 
 

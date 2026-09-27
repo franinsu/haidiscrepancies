@@ -5,7 +5,7 @@ SOURCES = ("Human", "GPT 5.6 Sol", "Claude Opus 4.8", "Gemini 3.5 Flash")
 
 SOURCE_HEADERS = {
     "Human": "Human",
-    "GPT 5.6 Sol": "ChatGPT",
+    "GPT 5.6 Sol": "GPT",
     "Claude Opus 4.8": "Claude",
     "Gemini 3.5 Flash": "Gemini",
 }
@@ -38,7 +38,7 @@ def render_table_tex(data: dict[str, Any]) -> str:
         "    \\toprule",
         "    & \\multicolumn{4}{c}{Mean normalized entropy [95\\% CI]} \\\\",
         "    \\cmidrule(l){2-5}",
-        "    Puzzle family & Human & ChatGPT & Claude & Gemini \\\\",
+        "    Puzzle family & Human & GPT & Claude & Gemini \\\\",
         "    \\midrule",
     ]
     for puzzle_type, label in PUZZLE_TYPES:

@@ -2,7 +2,7 @@
 from __future__ import annotations
 from .tables_tv import result_cell
 
-SOURCES = ['Human','ChatGPT','Claude','Gemini']
+SOURCES = ['Human','GPT','Claude','Gemini']
 CONDITIONS = ['Human','GPT 5.6 Sol|low|plain','Claude Opus 4.8|low|plain','Gemini 3.5 Flash|low|plain']
 GROUPS = [('minesweeper_lite','Minesweeper'),('mini_sudoku','Sudoku'),(None,'Mean')]
 
@@ -12,7 +12,7 @@ def grouped_table(caption,labels,metrics,select):
         r'\begin{table}[H]',r'  \caption{'+caption+'}',
         *[r'  \label{'+label+'}' for label in labels],r'  \centering',r'  \setlength{\tabcolsep}{2pt}',
         r'  \renewcommand{\arraystretch}{1.2}',r'  \begin{adjustbox}{max width=\linewidth}',
-        r'  \begin{tabular}{@{}lcccc@{}}',r'    \toprule',r'    Quantity & Human & ChatGPT & Claude & Gemini \\',r'    \midrule']
+        r'  \begin{tabular}{@{}lcccc@{}}',r'    \toprule',r'    Quantity & Human & GPT & Claude & Gemini \\',r'    \midrule']
     for index,(family,title) in enumerate(GROUPS):
         if index:lines.append(r'    \midrule')
         lines.append(r'    \multicolumn{5}{l}{\textit{'+title+r'}} \\')

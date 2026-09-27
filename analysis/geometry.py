@@ -404,7 +404,7 @@ def serializable_result(stats, mean_tv, family_tv, mean_tv_result, tv_cka_result
             'family_order':[FAMILY_LABELS[f] for f in FAMILY_ORDER],
             'mean_tv_matrix':mean_tv.tolist(),
             'family_tv_matrices':{FAMILY_LABELS[f]:family_tv[i].tolist() for i,f in enumerate(FAMILY_ORDER)},
-            'tv_source_sign_convention':'dimension 1 points from Uniform/Human toward model centroid; dimension 2 points from Claude/Gemini toward ChatGPT',
+            'tv_source_sign_convention':'dimension 1 points from Uniform/Human toward model centroid; dimension 2 points from Claude/Gemini toward GPT',
             'family_sign_convention':'largest absolute entry on each component is positive',
         },
         'mean_tv_mds':serializable_array_dict(mean_tv_result),

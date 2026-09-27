@@ -5,14 +5,14 @@ from __future__ import annotations
 from typing import Any, Iterable
 
 
-SOURCE_ORDER = ("Human", "ChatGPT", "Claude", "Gemini")
+SOURCE_ORDER = ("Human", "GPT", "Claude", "Gemini")
 
 PAIRS = (
-    (0, 1, "Human vs ChatGPT"),
+    (0, 1, "Human vs GPT"),
     (0, 2, "Human vs Claude"),
     (0, 3, "Human vs Gemini"),
-    (1, 2, "ChatGPT vs Claude"),
-    (1, 3, "ChatGPT vs Gemini"),
+    (1, 2, "GPT vs Claude"),
+    (1, 3, "GPT vs Gemini"),
     (2, 3, "Claude vs Gemini"),
 )
 
@@ -80,8 +80,8 @@ def check_item(item: dict[str, Any], n_puzzles: int) -> None:
         )
 
 def normalized_order(order: Iterable[str]) -> tuple[str, ...]:
-    """Accept the short-lived internal ``GPT`` display alias on old artifacts."""
-    return tuple("ChatGPT" if source == "GPT" else source for source in order)
+    """Accept the former ``ChatGPT`` display label on old artifacts."""
+    return tuple("GPT" if source == "ChatGPT" else source for source in order)
 
 def direction_label(kind: str) -> str:
     if kind == "distance":

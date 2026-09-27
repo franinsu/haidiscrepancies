@@ -11,14 +11,14 @@ from matplotlib.path import Path as MarkerPath
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 
 SOURCES = ['Human', 'GPT 5.6 Sol', 'Claude Opus 4.8', 'Gemini 3.5 Flash']
-LABEL = dict(zip(SOURCES, ['Human', 'ChatGPT', 'Claude', 'Gemini']))
+LABEL = dict(zip(SOURCES, ['Human', 'GPT', 'Claude', 'Gemini']))
 LABEL['Uniform'] = 'Uniform'
 SOURCE_PALETTE = json.loads(Path(__file__).with_name('source_palette.json').read_text())
 assert SOURCE_PALETTE['source_order'] == ['Uniform'] + SOURCES
 COLORS = dict(zip(SOURCE_PALETTE['source_order'], SOURCE_PALETTE['colors']))
 FAMILIES = ['arithmetic24', 'maze', 'grid_placement', 'minesweeper_lite', 'mini_sudoku']
 FLABEL = dict(zip(FAMILIES, ['Arithmetic', 'Maze', 'Rooks', 'Minesweeper', 'Sudoku']))
-FCOLOR = dict(zip(FAMILIES, ['#CC79A7', '#E6AB02', '#6A3D9A', '#8C564B', '#17AFC2']))
+FCOLOR = dict(zip(FAMILIES, ['#E377C2', '#F0C808', '#1B5E20', '#56B4E9', '#F58518']))
 WIDTH = 180 / 25.4
 # The paper's arxiv.sty uses a 6.6-inch text block. Shared 180-mm artwork is
 # reduced to that width (and 117-mm artwork to .65 of it) on inclusion.

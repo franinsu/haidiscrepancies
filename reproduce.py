@@ -67,7 +67,6 @@ def pipeline(args) -> None:
     sources += list((ROOT / 'figures').rglob('*.json'))
     sources += [ROOT / 'reproduce.py', ROOT / 'requirements.lock', ROOT / 'configs/study.json']
     report = {'status': 'running', 'mode': 'fresh_raw_to_figures',
-              'reference_paper_commit': json.loads((ROOT / 'configs/study.json').read_text())['reference_paper_commit'],
               'python': sys.version, 'platform': platform.platform(),
               'data_dir': str(args.data_dir.resolve()),
               'intermediate_dir': str(intermediate), 'output_dir': str(output),
@@ -121,7 +120,7 @@ def main():
     anonymize.add_argument('--id-map', type=Path, required=True,
                            help='Private CSV outside the repository and both archives')
     demo = commands.add_parser('demo', help='Invented responses; no access to collected human/model records')
-    demo.add_argument('--output-dir', type=Path, default=ROOT / 'checks/runs/demo')
+    demo.add_argument('--output-dir', type=Path, required=True, help='Fresh destination for the invented example')
     process = commands.add_parser('process', help='Fresh v5 model scoring and/or human retention')
     process.add_argument('--data-dir', type=Path, default=ROOT / 'data')
     process.add_argument('--output-dir', type=Path, required=True)

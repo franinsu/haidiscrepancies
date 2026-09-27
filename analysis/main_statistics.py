@@ -52,7 +52,7 @@ PROVIDERS = {
 COMMON_DISTRIBUTIONAL_SOURCE_ORDER = ("Human", *PROVIDERS)
 
 
-COMMON_DISTRIBUTIONAL_LABEL_ORDER = ("Human", "ChatGPT", "Claude", "Gemini")
+COMMON_DISTRIBUTIONAL_LABEL_ORDER = ("Human", "GPT", "Claude", "Gemini")
 
 
 PROMPTS = {"direct_solve": "plain", "human_participant": "as-human"}

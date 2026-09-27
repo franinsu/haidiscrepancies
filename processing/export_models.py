@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export the recorded model responses without provider payloads or identifiers.
+"""Export recorded model responses without provider payloads or asset paths.
 
 Only reviewed study fields are retained. New fields and populated API errors
 require review rather than being silently copied into a public archive.
@@ -15,16 +15,17 @@ import re
 
 ARCHIVES = ('openai/main', 'openai/module', 'anthropic/main',
             'anthropic/module', 'gemini/formal')
-REMOVED_FIELDS = frozenset(('provider_response_json', 'provider_response_id'))
+ASSET_PATH_FIELDS = frozenset(('image_path', 'prompt_file', 'prompt_file_used'))
+REMOVED_FIELDS = frozenset(('provider_response_json', 'provider_response_id')) | ASSET_PATH_FIELDS
 PUBLIC_FIELDS = frozenset('''
 api_error api_model_condition api_provider attempt_all_valid attempt_index
 attempt_invalid_reasons attempt_item_count attempt_solution_ids attempt_valid_count
 cache_creation_input_tokens cache_read_input_tokens cache_write_input_tokens
 cached_input_tokens collection_mode condition dataset_name feedback_mode
-hidden_reasoning_tokens image_id image_path image_sha256 incomplete_reason
+hidden_reasoning_tokens image_id image_sha256 incomplete_reason
 input_kind input_tokens latency_ms max_attempts max_output_tokens max_tokens
-model module output_token_cap output_tokens prompt_condition prompt_file
-prompt_file_used prompt_sha256 prompt_version provider_model provider_status
+model module output_token_cap output_tokens prompt_condition
+prompt_sha256 prompt_version provider_model provider_status
 puzzle_id puzzle_type raw_answer raw_response reasoning_effort reasoning_tokens
 render_version request_id request_start_time_iso response_end_time_iso retry_count
 run_id sample_index sampling_profile sequence_id source stop_reason temperature
@@ -43,7 +44,7 @@ def public_response(row):
         raise ValueError('A study-generated request_id is required for paired analysis')
     if row.get('api_error') not in (None, ''):
         raise ValueError('API error text needs separate review before publication')
-    for field in ('image_path', 'prompt_file', 'prompt_file_used'):
+    for field in ASSET_PATH_FIELDS:
         value = row.get(field)
         if value and (not isinstance(value, str) or Path(value).is_absolute()
                       or '\\' in value or ':' in value or value.startswith('~')
@@ -72,7 +73,7 @@ def run(input_dir, output_dir):
     before = {name: sha256(path) for name, path in inputs.items()}
     output.mkdir(parents=True)
     manifest = {'schema_version': 1, 'removed_fields': sorted(REMOVED_FIELDS),
-                'description': 'Recorded model responses; provider payloads and run/batch manifests omitted.',
+                'description': 'Recorded model responses; provider payloads, asset paths and run/batch manifests omitted.',
                 'files': {}}
     for name, path in inputs.items():
         destination = output / name / 'responses.jsonl.gz'

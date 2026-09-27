@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle, PathPatch
 from matplotlib.path import Path as MplPath
-from .plot_style import plt, FONT_FAMILY
+from .plot_style import plt, FONT_FAMILY, INTERVAL_ALPHA
 FAMILY_KEYS = ['arithmetic24', 'maze', 'grid_placement', 'minesweeper_lite', 'mini_sudoku']
 FAMILIES = ['Arithmetic', 'Maze', 'Rooks', 'Minesweeper', 'Sudoku']
 def axes_at(fig, box, page):
@@ -31,7 +31,7 @@ def cap_patch(fig, template, center, color, page):
         else:
             raise ValueError(kind)
     fig.add_artist(PathPatch(MplPath(vertices, codes), transform=fig.transFigure,
-                             facecolor=color, edgecolor=color, linewidth=.2,
+                             facecolor=color, edgecolor=color, linewidth=.2, alpha=INTERVAL_ALPHA,
                              joinstyle='round', capstyle='butt', zorder=3))
 
 def draw(bootstrap, geometry, layout, ab, output, *, previews=False):
@@ -79,7 +79,7 @@ def draw(bootstrap, geometry, layout, ab, output, *, previews=False):
             color = b['family_colors'][fi]
             interval = stats['ci95_matrix'][i][j]
             mean = stats['matrix'][i][j]
-            axb.plot(interval, [y, y], color=color, lw=.7,
+            axb.plot(interval, [y, y], color=color, lw=.7, alpha=INTERVAL_ALPHA,
                      solid_capstyle='butt', zorder=2)
             records.append({'row': ri, 'family': FAMILIES[fi], 'mean': mean,
                             'ci95': interval, 'y': y, 'color': color})
@@ -88,21 +88,21 @@ def draw(bootstrap, geometry, layout, ab, output, *, previews=False):
         for endpoint, side in zip(row['ci95'], ['left', 'right']):
             x_pdf = boxb[0]+endpoint*(boxb[2]-boxb[0])
             cap_patch(fig, b['cap_templates'][side], (x_pdf, y_pdf), row['color'], page)
-    # Figure-level points sit above figure-level cap outlines, matching0923.
+    # Figure-level points sit above figure-level cap outlines.
     for row in records:
         x = (boxb[0]+row['mean']*(boxb[2]-boxb[0]))/page[0]
         y_pdf = boxb[1]+(row['y']-b['ylim'][1])/(b['ylim'][0]-b['ylim'][1])*(boxb[3]-boxb[1])
         fig.add_artist(Line2D([x], [1-y_pdf/page[1]], transform=fig.transFigure,
                              marker='o', markersize=4.2, markeredgewidth=1,
-                             color=row['color'], linestyle='none', zorder=4))
+                             color=row['color'], alpha=INTERVAL_ALPHA, linestyle='none', zorder=4))
     for entry in ab['family_legend']:
         x0, y, x1, _ = entry['line']['bbox_pt']; color = entry['line']['stroke_color_hex']
         fig.add_artist(Line2D([x0/page[0], x1/page[0]], [1-y/page[1]]*2,
-                             transform=fig.transFigure, color=color, lw=.7,
+                             transform=fig.transFigure, color=color, lw=.7, alpha=INTERVAL_ALPHA,
                              solid_capstyle='projecting'))
         fig.add_artist(Line2D([(x0+x1)/2/page[0]], [1-y/page[1]],
                              transform=fig.transFigure, marker='o', markersize=4.2,
-                             markeredgewidth=1, color=color, linestyle='none'))
+                             markeredgewidth=1, color=color, alpha=INTERVAL_ALPHA, linestyle='none'))
 
     for key in ['c', 'd']:
         style = layout['panel_'+key]
@@ -149,7 +149,7 @@ def draw(bootstrap, geometry, layout, ab, output, *, previews=False):
                  ha='center' if horizontal and not reference_font else 'left', va='baseline', fontweight='bold' if 'Bold' in span['font'] else 'normal',
                  rotation=90 if span['direction'] == [0, -1] else 0, rotation_mode='anchor', zorder=5)
     fig.savefig(output, dpi=300, facecolor='white', metadata={
-        'Title': 'Figure 2: independently reproduced statistics in the 0923 style',
+        'Title': 'Figure 2: Solution-distribution distances across sources',
         'CreationDate': None, 'ModDate': None})
     if previews:
         fig.savefig(output.with_suffix('.png'), dpi=300, facecolor='white')

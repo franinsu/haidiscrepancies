@@ -1,6 +1,5 @@
 """Compose numerical calculations; never read reference results as inputs."""
 from __future__ import annotations
-from collections import Counter, defaultdict
 from pathlib import Path
 import json
 import numpy as np
@@ -26,38 +25,6 @@ def write(path, value):
     temporary = path.with_suffix(path.suffix + '.tmp')
     temporary.write_text(json.dumps(value, sort_keys=True, indent=2, allow_nan=False) + '\n')
     temporary.replace(path)
-
-
-def solution_probabilities(data_dir, processed_dir):
-    """Counts use the complete catalog, including unobserved valid classes."""
-    puzzles = list(core.read_jsonl(data_dir / 'stimuli/all_puzzles.jsonl'))
-    sources = ['Human', 'ChatGPT', 'Claude', 'Gemini']
-    counters = {s: defaultdict(Counter) for s in sources}
-    totals = {s: Counter() for s in sources}
-    for row in core.read_jsonl(processed_dir / 'human/main_retained.jsonl'):
-        pid = str(row['puzzle_id']); totals['Human'][pid] += 1
-        cls = row.get('abstract_solution_id') or row.get('solution_id')
-        if row.get('is_correct') and cls: counters['Human'][pid][str(cls)] += 1
-    for label, (_, provider) in zip(sources[1:], core.PROVIDERS.items()):
-        for row in core.read_jsonl(processed_dir / 'ai' / (provider['slug']+'_main.jsonl')):
-            if row.get('api_model_condition') != provider['conditions']['low'] or row.get('prompt_condition') != 'direct_solve': continue
-            pid = str(row['puzzle_id']); totals[label][pid] += 1
-            cls = row.get('abstract_solution_id') or row.get('solution_id')
-            if row.get('is_valid') and cls: counters[label][pid][str(cls)] += 1
-    records = []
-    for puzzle in sorted(puzzles, key=lambda p:(core.TYPE_ORDER.index(p['puzzle_type']),p['id'])):
-        pid = puzzle['id']
-        classes = sorted({str(s.get('abstract_solution_id') or s['solution_id']) for s in puzzle['solutions']})
-        counts = []
-        for source in sources:
-            if not set(counters[source][pid]) <= set(classes): raise ValueError(f'Unknown answer class for {pid}')
-            values = [counters[source][pid][c] for c in classes]
-            if sum(values) == 0: raise ValueError(f'No valid responses for {pid}, {source}')
-            counts.append(values)
-        records.append(dict(id=pid, family_key=puzzle['puzzle_type'], classes=classes,
-            counts=counts, valid_n=[sum(v) for v in counts], total_n=[totals[s][pid] for s in sources],
-            probabilities=[[n/sum(v) for n in v] for v in counts]))
-    return dict(sources=sources, condition='low effort, plain prompt', puzzles=records)
 
 
 def source_geometry(stats):
@@ -104,7 +71,7 @@ def condition_geometry(stats, source):
 
 def mi_summary(records, bootstrap=5000):
     """MI level contrasts use paired whole-puzzle bootstrap, with no sign-flip tests."""
-    sources = ['Human','ChatGPT','Claude','Gemini']
+    sources = ['Human','GPT','Claude','Gemini']
     display = {'Human':'Human', **{core.condition_key(p,'low','direct_solve'):label for p,label in zip(core.PROVIDERS,sources[1:])}}
     contexts = {'related':'Related','unrelated_control':'Unrelated'}
     tests = [dict(source=display[r['source']],context=contexts[r['arm']],family=core.TYPE_LABELS[r['family']],
@@ -146,7 +113,6 @@ def run_summaries(data_dir, processed_dir, output_dir, bootstrap=5000, permutati
     print('Computing main distributions, condition comparisons and uncertainty.',flush=True)
     stats=core.compute(data_dir,processed_dir)
     write(output_dir/'figure_statistics.json',stats)
-    write(output_dir/'main_solution_probabilities.json',solution_probabilities(data_dir,processed_dir))
     puzzles,blocks=core.puzzle_metadata(data_dir)
     print('Computing normalized entropy, effort and geometry.',flush=True)
     ent=entropy.compute_normalized_entropy(stats,puzzles,stats['main_puzzle_ids'],blocks)

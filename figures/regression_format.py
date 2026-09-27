@@ -12,7 +12,7 @@ from typing import Any
 
 
 PROVIDERS = (
-    ("GPT-5.6 Sol", "ChatGPT"),
+    ("GPT-5.6 Sol", "GPT"),
     ("Claude Opus 4.8", "Claude"),
     ("Gemini 3.5 Flash", "Gemini"),
 )

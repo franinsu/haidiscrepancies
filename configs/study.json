@@ -1,7 +1,5 @@
 {
   "schema_version": 1,
-  "reference_paper_commit": "cd1119c4b9f5460b3802d65d4736eebd05749c4f",
-  "reference_paper_revision": "0923, 23 September 2026",
   "parser": "response_parser_v5",
   "primary_condition": {
     "model_effort": "low",
@@ -33,6 +31,5 @@
   },
   "raw_human_location": "data/human",
   "raw_ai_location": "data/ai",
-  "human_publication_rule": "Only summary statistics underlying paper figures and tables; no raw or participant-level records.",
-  "numerical_policy": "Fully specified reproducible calculations; document small differences from unrecoverable historical random realizations."
+  "human_publication_rule": "Only summary statistics underlying paper figures and tables; no raw or participant-level records."
 }

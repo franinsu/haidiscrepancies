@@ -366,9 +366,9 @@ def compute(project: Path, repro: Path) -> dict[str, Any]:
             "floor": {
                 "human_seconds": None,
                 "model_tokens": MODEL_TOKEN_FLOOR,
-                "note": "Human times are not floored. Model per-puzzle medians are floored at one reasoning token before the log; the floor does not bind in the low-effort/plain primary analysis, and binds for two ChatGPT low-effort/persona puzzles, one medium-effort/persona puzzle and one medium-effort/plain puzzle in the condition appendix",
+                "note": "Human times are not floored. Model per-puzzle medians are floored at one reasoning token before the log; the floor does not bind in the low-effort/plain primary analysis, and binds for two GPT low-effort/persona puzzles, one medium-effort/persona puzzle and one medium-effort/plain puzzle in the condition appendix",
             },
-            "zero_token_note": "ChatGPT reports zero reasoning tokens on some responses; on a few Arithmetic puzzles it does so for most or all responses in a cell, so a per-puzzle median or mean can be exactly zero and neither could be logged without a floor",
+            "zero_token_note": "GPT reports zero reasoning tokens on some responses; on a few Arithmetic puzzles it does so for most or all responses in a cell, so a per-puzzle median or mean can be exactly zero and neither could be logged without a floor",
             "source_demeaning": "Human: subtract the mean across the 100 core puzzles of log per-puzzle median time; models: subtract the mean across the same puzzles of log per-puzzle median tokens; each provider effort/prompt cell is centered separately",
             "unit_invariance": "multiplying every effort by a constant adds a constant to every log and cancels after demeaning",
             "scale_note": "demeaning removes the level only; dispersion across puzzles remains source-specific and is reported as an across-puzzle standard deviation",

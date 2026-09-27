@@ -11,9 +11,10 @@ def render(data):
     from .plot_style import (plt, SOURCES, COLORS, LABEL, FAMILIES, FLABEL, WIDTH,
                             point_ci, finalize, INTERVAL_ALPHA,
                             INTERVAL_LINE_WIDTH, LEGEND_MARKER_SIZE)
-    # One-third-page width, with the shared physical font and marker sizes.
-    fig, ax = plt.subplots(figsize=(WIDTH / 3, 70 / 25.4))
-    fig.subplots_adjust(left=.35, right=.97, top=.94, bottom=.28)
+    # The wide layout is displayed at 62% of the manuscript text width.
+    width = WIDTH * .62
+    fig, ax = plt.subplots(figsize=(width, width * 190 / 300))
+    fig.subplots_adjust(left=.235, right=.97, top=.94, bottom=.255)
     points = []
     for fi, family in enumerate(FAMILIES):
         for source in SOURCES:
@@ -27,7 +28,7 @@ def render(data):
     pad = .05 * (high - low)
     limits = (np.floor((low - pad) * 4) / 4,
               np.ceil((high + pad) * 4) / 4)
-    ax.set(xlim=limits, ylim=(4.55, -.55), yticks=range(5),
+    ax.set(xlim=limits, ylim=(4.6, -.6), yticks=range(5),
            yticklabels=[FLABEL[f] for f in FAMILIES], xlabel='Relative difficulty')
     ax.set_xticks(np.arange(np.ceil(limits[0]), np.floor(limits[1]) + 1))
     ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:g}'))
@@ -38,10 +39,9 @@ def render(data):
     handles = [Line2D([], [], color=COLORS[s], marker='o', markeredgewidth=0,
                       markersize=LEGEND_MARKER_SIZE, lw=INTERVAL_LINE_WIDTH,
                       alpha=INTERVAL_ALPHA, label=LABEL[s]) for s in SOURCES]
-    # Matplotlib fills columns; reorder to keep Human/ChatGPT on the first row.
-    fig.legend(handles=[handles[i] for i in [0, 2, 1, 3]],
+    fig.legend(handles=handles,
                loc='lower center', bbox_to_anchor=(.5, .005),
-               frameon=False, ncol=2, handlelength=1.4,
+               frameon=False, ncol=4, handlelength=1.4,
                handletextpad=.5, columnspacing=1)
     finalize(fig)
 

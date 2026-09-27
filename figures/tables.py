@@ -6,7 +6,7 @@ from . import tables_regression, tables_maze, tables_modules
 from .regression_format import interval_cell
 
 SOURCES = ['Human', 'GPT-5.6 Sol|low|plain', 'Claude Opus 4.8|low|plain', 'Gemini 3.5 Flash|low|plain']
-LABELS = ['Human', 'ChatGPT', 'Claude', 'Gemini']
+LABELS = ['Human', 'GPT', 'Claude', 'Gemini']
 FAMILIES = [('arithmetic','Arithmetic'),('maze','Maze'),('grid','Rooks'),('minesweeper','Minesweeper'),('sudoku','Sudoku')]
 
 
@@ -22,7 +22,7 @@ def accuracy_table(read):
         r'\label{tab:feature-accuracy-overview}',r'\small',r'\setlength{\tabcolsep}{5pt}',r'\renewcommand{\arraystretch}{1.15}',r'\begin{tabular}{@{}lcccc@{}}',r'\toprule']
     values=[]
     for task,title in [('choice','Selected-solution prediction'),('source','Model-versus-Human prediction')]:
-        lines.extend([r'\multicolumn{5}{@{}l}{\textbf{'+('a' if task=='choice' else 'b')+r'}\quad '+title+r'} \\',r'Family & Human & ChatGPT & Claude & Gemini \\',r'\midrule'])
+        lines.extend([r'\multicolumn{5}{@{}l}{\textbf{'+('a' if task=='choice' else 'b')+r'}\quad '+title+r'} \\',r'Family & Human & GPT & Claude & Gemini \\',r'\midrule'])
         for stem,label in FAMILIES:
             data=read('maze_three_feature_models' if stem=='maze' else stem+'_feature_models')
             fits=selected_fits(stem,data)[task]; cells=[]
@@ -43,7 +43,7 @@ def perturbation_table(data):
     sources=['Human','GPT 5.6 Sol|low|plain','Claude Opus 4.8|low|plain','Gemini 3.5 Flash|low|plain']
     lines=[r'\begin{table}[H]',r'\centering',
         r'\caption{\textbf{TV permutation tests.} Cells report mean unadjusted $p$, followed by the number of comparisons with Holm-adjusted $p\le0.05$ out of the total.}',
-        r'\label{tab:perturbation_tests}',r'\small',r'\setlength{\tabcolsep}{6pt}',r'\begin{tabular}{@{}lcccc@{}}',r'\toprule',r'Module & Human & ChatGPT & Claude & Gemini \\',r'\midrule']
+        r'\label{tab:perturbation_tests}',r'\small',r'\setlength{\tabcolsep}{6pt}',r'\begin{tabular}{@{}lcccc@{}}',r'\toprule',r'Module & Human & GPT & Claude & Gemini \\',r'\midrule']
     for key,label in specs:
         cells=[]
         for source in sources:

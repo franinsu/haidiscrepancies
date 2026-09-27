@@ -1,4 +1,4 @@
-"""Selected effort matrix. Points are per-puzzle summaries, never participant rows."""
+"""Relative-difficulty scatter matrix with diagonal puzzle histograms."""
 import numpy as np
 from matplotlib.lines import Line2D
 from matplotlib.text import Text
@@ -14,8 +14,8 @@ def render(summary):
         raise ValueError('Relative difficulty requires the five study families')
     families = np.asarray(types)
     common_limits = (-3, 3)
-    common_grid = np.linspace(*common_limits, 801)
-    standardization, standardized, curves = {}, {}, {}
+    bin_edges = np.linspace(*common_limits, 21)
+    standardization, standardized, histograms = {}, {}, {}
     for source in SOURCES:
         raw = np.asarray([summary['primary'][source]['values_by_puzzle'][p] for p in order])
         if raw.shape != (100,) or not np.isfinite(raw).all():
@@ -30,20 +30,23 @@ def render(summary):
         standardization[source] = {'n': len(raw), 'mean_before': mean,
             'sample_sd_before': sd, 'ddof': 1, 'mean_after': float(z.mean()),
             'sample_sd_after': float(z.std(ddof=1))}
-        # Express the original Scott bandwidth in standardized units.
-        bandwidth = (sd * len(raw)**(-1/5)) / sd
-        density = np.exp(-.5 * ((common_grid[:, None] - z[None, :]) / bandwidth) ** 2).mean(axis=1)
-        density /= bandwidth * np.sqrt(2 * np.pi)
-        curves[source] = {'grid': common_grid.tolist(), 'density': density.tolist(),
-                          'bandwidth': bandwidth}
+        counts, _ = np.histogram(z, bins=bin_edges)
+        assert counts.sum() == len(z) == 100
+        histograms[source] = {'counts': counts.tolist(),
+                              'percent': (100 * counts / len(z)).tolist()}
 
-    width, height = 180, 166
+    # Bake the selected manuscript crop into the exported figure itself.
+    # Crop values are PDF points: left, bottom, right, top.
+    original_width, original_height = 180, 166
+    crop_left, crop_bottom, crop_right, crop_top = np.array([32, 4, 52, 30]) * 25.4 / 72
+    width = original_width - crop_left - crop_right
+    height = original_height - crop_bottom - crop_top
     common_ticks = [-3, -2, -1, 0, 1, 2, 3]
     fig = plt.figure(figsize=(width / 25.4, height / 25.4), facecolor='white')
-    grid = fig.add_gridspec(4, 4, left=20 / width, right=160 / width,
-                           bottom=17 / height, top=157 / height,
+    grid = fig.add_gridspec(4, 4, left=(20 - crop_left) / width, right=(160 - crop_left) / width,
+                           bottom=(17 - crop_bottom) / height, top=(157 - crop_bottom) / height,
                            wspace=.15, hspace=.15)
-    max_density = max(max(curve['density']) for curve in curves.values()) * 1.10
+    max_percent = max(max(hist['percent']) for hist in histograms.values()) * 1.10
 
 
     for row, source_y in enumerate(SOURCES):
@@ -58,12 +61,11 @@ def render(summary):
             ax.yaxis.set_major_formatter(formatter)
             ax.spines[['top', 'right']].set_visible(False)
             if row == col:
-                marginal = curves[source_x]
-                ax.plot(marginal['grid'], marginal['density'], color=COLORS[source_x], lw=.9)
-                ax.fill_between(marginal['grid'], 0, marginal['density'], color=COLORS[source_x], alpha=.13)
-                ax.vlines(standardized[source_x], 0, max_density * .04,
-                          color=COLORS[source_x], lw=.4, alpha=.45)
-                ax.set_ylim(0, max_density)
+                marginal = histograms[source_x]
+                ax.stairs(marginal['percent'], bin_edges, color=COLORS[source_x],
+                          fill=True, alpha=.13, linewidth=0)
+                ax.stairs(marginal['percent'], bin_edges, color=COLORS[source_x], lw=.9)
+                ax.set_ylim(0, max_percent)
                 ax.spines['left'].set_visible(False)
                 ax.set_yticks([])
             else:
@@ -90,10 +92,13 @@ def render(summary):
                       markeredgewidth=0, color=FCOLOR[f], alpha=.9, label=FLABEL[f])
                for f in FAMILIES]
     legend = fig.legend(handles=handles, title='Puzzle family', loc='upper left',
-                        bbox_to_anchor=(.59, .91), frameon=False, labelspacing=.8,
+                        bbox_to_anchor=((.59 * original_width - crop_left) / width,
+                                        (.91 * original_height - crop_bottom) / height),
+                        frameon=False, labelspacing=.8,
                         handletextpad=.5, borderaxespad=0)
     legend.get_title().set_fontsize(7)
-    fig.text(.50, 3 / height, 'Standardized relative difficulty (z-score)', ha='center', fontsize=7, color='black')
+    fig.text((.50 * original_width - crop_left) / width, (3 - crop_bottom) / height,
+             'Standardized relative difficulty (z-score)', ha='center', fontsize=7, color='black')
     typography(fig, scale=1 / MANUSCRIPT_FIGURE_SCALE)
     fig.canvas.draw()
     renderer = fig.canvas.get_renderer()
@@ -103,4 +108,10 @@ def render(summary):
         box = label.get_window_extent(renderer)
         if not (fig.bbox.contains(box.x0, box.y0) and fig.bbox.contains(box.x1, box.y1)):
             raise ValueError(f'Figure label is clipped: {label.get_text()}')
-    return fig, {'puzzle_ids':order, 'families':types, 'z_scores':{s:v.tolist() for s,v in standardized.items()}, 'density_curves':curves, 'standardization':standardization}
+    return fig, {'puzzle_ids':order, 'families':types,
+        'z_scores':{s:v.tolist() for s,v in standardized.items()},
+        'histogram':{'bin_edges':bin_edges.tolist(), 'bin_width':.3,
+            'units':'percent of puzzles',
+            'method':'Equal-width bins; left-closed and right-open except the final bin, which includes 3',
+            'sources':histograms},
+        'standardization':standardization}

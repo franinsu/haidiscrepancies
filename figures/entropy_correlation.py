@@ -1,4 +1,4 @@
-"""Lower-triangle entropy comparisons with one density curve per source."""
+"""Lower-triangle entropy comparisons with diagonal puzzle histograms."""
 
 def entropy_scale(v):
     import numpy as np
@@ -6,17 +6,6 @@ def entropy_scale(v):
     span=high-low;step=.5 if span>=.95 else .25 if span>=.8 else .2 if span>=.6 else .1 if span>=.3 else .05
     ticks=np.round(np.arange(step*np.ceil((low-1e-12)/step),step*np.floor((high+1e-12)/step)+.5*step,step),10)
     return (low,high),ticks
-
-def marginal(values,limits):
-    import numpy as np
-    # Exact original bounded-entropy display smoother: fixed 0.075 bandwidth,
-    # reflections at 0 and 1, and unit-area normalization on the 401-point grid.
-    grid=np.linspace(*limits,401);bandwidth=.075
-    direct=(grid[:,None]-values[None,:])/bandwidth
-    low=(grid[:,None]+values[None,:])/bandwidth
-    high=(grid[:,None]-(2-values[None,:]))/bandwidth
-    density=np.sum(np.exp(-.5*direct**2)+np.exp(-.5*low**2)+np.exp(-.5*high**2),axis=1)/(np.sqrt(2*np.pi)*bandwidth*len(values))
-    return grid,density/np.trapezoid(density,grid)
 
 def render(data):
     import itertools
@@ -29,9 +18,15 @@ def render(data):
     types = np.array([data['puzzle_types'][p] for p in order])
     values = {s: np.array([data['values_by_puzzle'][s][p] for p in order]) for s in SOURCES}
     scales = {s: entropy_scale(values[s]) for s in SOURCES}
-    # Keep the original reflected KDE and common [0,1] evaluation grid.
-    curves = {s: marginal(values[s], (0, 1)) for s in SOURCES}
-    max_density = max(density.max() for _, density in curves.values()) * 1.10
+    # Match the entropy-profile figure's bins, shared across all sources.
+    bin_edges = np.linspace(0, 1, 21)
+    histograms = {}
+    for source in SOURCES:
+        counts, _ = np.histogram(values[source], bins=bin_edges)
+        assert counts.sum() == len(values[source]) == 100
+        histograms[source] = {'counts': counts.tolist(),
+                              'percent': (100 * counts / len(values[source])).tolist()}
+    max_percent = max(max(hist['percent']) for hist in histograms.values()) * 1.10
 
     width, height = 180, 166
     fig = plt.figure(figsize=(width / 25.4, height / 25.4), facecolor='white')
@@ -47,12 +42,11 @@ def render(data):
             clean(ax, grid='both')
             ax.tick_params(length=2, width=.55, pad=2)
             if row == col:
-                density_grid, density = curves[source_x]
-                ax.plot(density_grid, density, color=COLORS[source_x], lw=.9)
-                ax.fill_between(density_grid, 0, density, color=COLORS[source_x], alpha=.13)
-                ax.vlines(values[source_x], 0, max_density * .04,
-                          color=COLORS[source_x], lw=.4, alpha=.45)
-                ax.set(ylim=(0, max_density), yticks=[])
+                marginal = histograms[source_x]
+                ax.stairs(marginal['percent'], bin_edges, color=COLORS[source_x],
+                          fill=True, alpha=.13, linewidth=0)
+                ax.stairs(marginal['percent'], bin_edges, color=COLORS[source_x], lw=.9)
+                ax.set(ylim=(0, max_percent), yticks=[])
                 ax.spines['left'].set_visible(False)
                 ax.grid(False)
             else:
@@ -78,12 +72,17 @@ def render(data):
                         bbox_to_anchor=(.59, .91), frameon=False, labelspacing=.8,
                         handletextpad=.5, borderaxespad=0)
     legend.get_title().set_fontsize(7)
-    fig.text(.50, 3 / height, 'Normalized entropy on both axes', ha='center', fontsize=7)
+    fig.text(.50, 3 / height, 'Normalized entropy', ha='center', fontsize=7)
     # Retain the source-data ordering independently of the new display order.
     points = [{'sources': [sx, sy], 'puzzle_ids': order,
                'x': values[sx].tolist(), 'y': values[sy].tolist(),
                'x_limits': scales[sx][0], 'y_limits': scales[sy][0]}
               for sx, sy in itertools.combinations(SOURCES, 2)]
-    payload = {'panels':points,'puzzle_types':data['puzzle_types'],'marginal':'Gaussian KDE with fixed bandwidth 0.075 and boundary reflections at 0 and 1; normalized over [0,1]; descriptive, not a confidence interval.'}
+    payload = {'panels':points, 'puzzle_types':data['puzzle_types'],
+        'marginal':'Histogram of normalized entropy across puzzles; descriptive, not a confidence interval.',
+        'histogram':{'bin_edges':bin_edges.tolist(), 'bin_width':.05,
+            'units':'percent of puzzles',
+            'method':'Equal-width bins; left-closed and right-open except the final bin, which includes 1',
+            'sources':histograms}}
     finalize(fig)
     return fig, payload

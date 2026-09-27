@@ -60,16 +60,47 @@ def run(input_dir, output_dir, stimuli_dir, *, only=None, reference=False, previ
         if unknown:raise ValueError(f'Unknown requested outputs: {sorted(unknown)}')
         entries=[r for r in entries if r['name'] in only]
     names={r['name'] for r in entries}; hashes={}
-    if (any(r['public_input_class']=='display_summary' for r in entries)
-            and not reference and not (input_dir/'analysis_manifest.json').is_file()):
-        raise ValueError('Saved statistical inputs without an analysis manifest require --reference')
+    has_statistics=any(r['public_input_class']=='display_summary' for r in entries)
+    analysis_parameters={}; expected_hashes=None
+    draw_counts={'bootstrap':5000,'regression_draws':2000,'permutations':10000,'mi_permutations':2000}
+    if has_statistics:
+        analysis_manifest=input_dir/'analysis_manifest.json'
+        if not reference and not analysis_manifest.is_file():
+            raise ValueError('Saved statistical inputs without an analysis manifest require --reference')
+        analysis={}
+        if analysis_manifest.is_file():
+            try:
+                analysis=json.loads(analysis_manifest.read_bytes())
+                # Reject nonfinite metadata before any rendering writes.
+                json.dumps(analysis,allow_nan=False)
+            except (ValueError,UnicodeError) as error:
+                if not reference:raise ValueError('Invalid analysis manifest') from error
+                analysis={}
+        if not reference:
+            if not isinstance(analysis,dict) or analysis.get('status')!='complete':
+                raise ValueError('Rendering current statistics requires a complete analysis manifest')
+            expected_hashes=analysis.get('outputs_sha256')
+            if not isinstance(expected_hashes,dict):
+                raise ValueError('Analysis manifest must record output hashes')
+        parameters=analysis.get('parameters') if isinstance(analysis,dict) else None
+        if (isinstance(parameters,dict) and all(type(parameters.get(key)) is int
+                and parameters[key]>=(2 if key=='regression_draws' else 1) for key in draw_counts)):
+            analysis_parameters=parameters
+        elif not reference:
+            raise ValueError('Analysis manifest must record valid resampling parameters')
     cache={}
     def read(stem):
         if stem not in cache:
             path=input_dir/(stem+'.json')
-            hashes[path.name]=sha(path);cache[stem]=json.loads(path.read_text())
+            content=path.read_bytes(); digest=hashlib.sha256(content).hexdigest()
+            if expected_hashes is not None:
+                if path.name not in expected_hashes:
+                    raise ValueError(f'Analysis manifest lacks an output hash for {path.name}')
+                if expected_hashes[path.name]!=digest:
+                    raise ValueError(f'Statistics do not match the analysis manifest: {path.name}')
+            hashes[path.name]=digest;cache[stem]=json.loads(content)
         return cache[stem]
-    # Fail before writing if a requested numerical artifact is missing.
+    # Validate all requested numerical artifacts before writing any outputs.
     for entry in entries:
         if entry['public_input_class']=='display_summary':
             for filename in entry['inputs']:read(Path(filename).stem)
@@ -90,7 +121,8 @@ def run(input_dir, output_dir, stimuli_dir, *, only=None, reference=False, previ
         elif name=='tv_source_geometry':data=tv_geometry.render(read('figure_statistics'),read('source_geometry'),artwork/(name+'.pdf'), previews=previews)
         elif name=='entropy_profile':
             fig,payload=entropy_profile.render(read('entropy_deficit_stats'))
-            data={'summary':payload['summary']['records'],'density':payload['density'],'source_labels':payload['source_labels']}
+            data={'summary':payload['summary']['records'],'histogram':payload['histogram'],
+                  'source_labels':payload['source_labels']}
             save(fig,name,artwork,previews=previews)
         else:
             if name=='fig_presentation_context':fig,data=conditions.presentation(read('perturbation_statistics'),read('gain_summaries'),read('stimulus_sensitivity_stats'))
@@ -120,9 +152,7 @@ def run(input_dir, output_dir, stimuli_dir, *, only=None, reference=False, previ
             path=Path(font_manager.findfont(font_manager.FontProperties(family=family,weight=weight,style=style),fallback_to_default=False))
             files[weight+'/'+style]={'filename':path.name,'sha256':sha(path)}
         return files
-    analysis_manifest=input_dir/'analysis_manifest.json'
-    analysis_parameters=json.loads(analysis_manifest.read_text()).get('parameters',{}) if analysis_manifest.is_file() else {}
-    reduced_draws=any(analysis_parameters.get(key,expected)!=expected for key,expected in [('bootstrap',5000),('regression_draws',2000),('permutations',10000),('mi_permutations',2000)])
+    reduced_draws=has_statistics and any(analysis_parameters.get(key)!=expected for key,expected in draw_counts.items())
     result={'previews':previews, 'validation_only':reduced_draws, 'font_files':font_hashes(FONT_FAMILY), 'upstream_parameters':analysis_parameters, 'mode':'archived-reference-render' if reference else 'computed-statistics-render',
             'font_family':FONT_FAMILY,'numerical_input_sha256':hashes,
             'analysis_parameters':{name:{key:obj[key] for key in ['bootstrap','tv_bootstrap','global_tv_response_bootstrap','permutation','bootstrap_repeats'] if key in obj} for name,obj in cache.items()},
@@ -141,7 +171,7 @@ def main():
     parser.add_argument('--stimuli-dir',type=Path)
     parser.add_argument('--data-dir',type=Path,default=ROOT/'data',help='Public stimulus catalog is read from its stimuli subfolder')
     parser.add_argument('--only',nargs='+')
-    parser.add_argument('--previews',action='store_true',help='Also render PNG previews of the ten PDF figures')
+    parser.add_argument('--previews',action='store_true',help='Also render PNG previews of selected PDF figures')
     parser.add_argument('--reference',action='store_true',help='Explicitly render archived inputs; this is not a fresh reproduction')
     args=parser.parse_args()
     result=run(args.input_dir,args.output_dir,args.stimuli_dir or args.data_dir/'stimuli',only=args.only,reference=args.reference,previews=args.previews)

@@ -42,7 +42,7 @@ FAMILIES = {
     'minesweeper': ('minesweeper_lite', 'Minesweeper', 20260827),
     'sudoku': ('mini_sudoku', 'Sudoku', 20260827),
 }
-SOURCES = {'Human': 'Human', 'ChatGPT': 'GPT-5.6 Sol|low|plain',
+SOURCES = {'Human': 'Human', 'GPT': 'GPT-5.6 Sol|low|plain',
            'Claude': 'Claude Opus 4.8|low|plain', 'Gemini': 'Gemini 3.5 Flash|low|plain'}
 CODE_NAMES = ('__init__.py', 'regression_core.py', 'grid_features.py', 'additional_features.py',
               'maze_features.py', 'constant_feature_means.py', 'regression_optimizer.py', 'regression_bootstrap.py')

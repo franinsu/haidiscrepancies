@@ -69,7 +69,7 @@ def conditions(S, projection):
             linewidths=.65, alpha=INTERVAL_ALPHA, zorder=4 if spec['filled'] else 3)
 
     fig = plt.figure(figsize=(WIDTH, 5.8))
-    fig.text(.47, .96, 'a', fontweight='bold', fontsize=8)
+    fig.text(.47, .96, 'b', fontweight='bold', fontsize=8)
     condition_levels = []
     ax = fig.add_axes([.625, .59, .345, .34])
     ax.axvspan(*uniform_reference['ci95'],color=COLORS['Uniform'],alpha=.10,zorder=0)
@@ -100,7 +100,7 @@ def conditions(S, projection):
         loc='center', bbox_to_anchor=(.52, .070), ncol=5, frameon=False,
         columnspacing=1.2, handletextpad=.5)
 
-    fig.text(.025, .715, 'b', fontweight='bold', fontsize=8)
+    fig.text(.025, .715, 'a', fontweight='bold', fontsize=8)
     ax = fig.add_axes([.075, .42, .345, .255])
     for i, label, offset, ha, va in [(0,'Uniform',(-5,7),'right','bottom'),(1,'Human',(0,-8),'center','top')]:
         geometry_dot(ax,*coordinates[i],COLORS[label])
